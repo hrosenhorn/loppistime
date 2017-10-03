@@ -1,13 +1,35 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
-    <router-view></router-view>
+    <b-container class="bv-example-row">
+        <b-row>
+            <my-header />
+        </b-row>
+
+        <b-row>
+            <b-col>
+                <router-view></router-view>
+            </b-col>
+        </b-row>
+        <b-row>
+            <my-footer />
+        </b-row>
+
+    </b-container>
+
+
   </div>
 </template>
 
 <script>
+import MyHeader from './components/Header'
+import MyFooter from './components/Footer'
+
 export default {
-  name: 'app'
+  name: 'app',
+  components: {
+    MyHeader,
+    MyFooter
+  }
 }
 </script>
 

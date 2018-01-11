@@ -119,6 +119,18 @@ $("#buttonCompletePurchase").click(function() {
     }
 
     purchaseHistory.addEntry(cart.items);
+
+    var dbData = [];
+    cart.items.forEach(function(entry) {
+        dbData.push({
+            "seller": entry.seller,
+            "amount": entry.amount
+        });
+    });
+
+    var newEntryRef = firebase.database().ref().child('purchases').push();
+    newEntryRef.set(dbData);
+
     cart.reset();
 });
 
@@ -139,8 +151,6 @@ $("#buttonAddEntry").click(function() {
     amountElem.val("");
     sellerElem.focus();
 });
-
-
 
 function validateAddEntryAmount() {
     var amountElem = $("#addEntryAmount");
@@ -192,6 +202,36 @@ $('#addEntryAmount').on('input', function() {
 });
 
 
-$(document).ready(function(){
+$('#exampleModal').on('hidden.bs.modal', function (e) {
+   console.log("Modal dismissed");
 
+    var user = firebase.auth().currentUser;
+    if (!user) {
+        $('#exampleModal').modal('toggle');
+    }
+});
+
+// Add entry to current purchase button
+$("#modalButtonLogin").click(function() {
+    var password = $("#modalPassword").val();
+    var email = "hakan@rosenhorn.se";
+    firebase.auth().signInAndRetrieveDataWithEmailAndPassword(email, password).catch(function(error) {
+        // Handle Errors here.
+        var errorCode = error.code;
+        var errorMessage = error.message;
+
+        console.log("Login failed with ", error);
+    });
+});
+
+$(document).ready(function(){
+    firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+            console.log("User is logged in");
+            $('#exampleModal').modal('hide');
+        } else {
+            console.log("User is not logged in");
+            $('#exampleModal').modal('show');
+        }
+    });
 });

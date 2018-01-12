@@ -214,7 +214,7 @@ $('#exampleModal').on('hidden.bs.modal', function (e) {
 // Add entry to current purchase button
 $("#modalButtonLogin").click(function() {
     var password = $("#modalPassword").val();
-    var email = "hakan@rosenhorn.se";
+    var email = "loppis@rosenhorn.se";
     firebase.auth().signInAndRetrieveDataWithEmailAndPassword(email, password).catch(function(error) {
         // Handle Errors here.
         var errorCode = error.code;

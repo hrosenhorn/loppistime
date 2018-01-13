@@ -2,7 +2,7 @@
 
 > Loppis!
 
-[Example](https://github.com/hrosenhorn/loppistime/blob/master/mockups/landing.PNG?raw=true)
+![Example](https://github.com/hrosenhorn/loppistime/blob/master/mockups/landing.PNG?raw=true)
 
 ## Build Setup
 

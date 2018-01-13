@@ -73,14 +73,14 @@ class History {
 
     addEntry(cartItems) {
 
-        var itemCount = 0;
-        var total = 0;
+        let itemCount = 0;
+        let total = 0;
         cartItems.forEach(function(entry) {
             itemCount++;
             total += entry["amount"];
         });
 
-        var entry = {
+        let entry = {
             items: itemCount,
             amount: total
         };
@@ -105,8 +105,8 @@ class History {
     }
 }
 
-var cart = new Cart();
-var purchaseHistory = new History();
+let cart = new Cart();
+let purchaseHistory = new History();
 
 // Handlers
 
@@ -120,7 +120,7 @@ $("#buttonCompletePurchase").click(function() {
 
     purchaseHistory.addEntry(cart.items);
 
-    var dbData = [];
+    let dbData = [];
     cart.items.forEach(function(entry) {
         dbData.push({
             "seller": entry.seller,
@@ -128,7 +128,7 @@ $("#buttonCompletePurchase").click(function() {
         });
     });
 
-    var newEntryRef = firebase.database().ref().child('purchases').push();
+    let newEntryRef = firebase.database().ref().child('purchases').push();
     newEntryRef.set(dbData);
 
     cart.reset();
@@ -142,8 +142,8 @@ $("#buttonAddEntry").click(function() {
         return false;
     }
 
-    var sellerElem = $("#addEntrySeller");
-    var amountElem = $("#addEntryAmount");
+    let sellerElem = $("#addEntrySeller");
+    let amountElem = $("#addEntryAmount");
 
     cart.addEntry(sellerElem.val(), Number(amountElem.val()));
 
@@ -153,7 +153,7 @@ $("#buttonAddEntry").click(function() {
 });
 
 function validateAddEntryAmount() {
-    var amountElem = $("#addEntryAmount");
+    let amountElem = $("#addEntryAmount");
     if (!Number(amountElem.val())) {
         return false;
     }
@@ -211,8 +211,7 @@ $('#exampleModal').on('hidden.bs.modal', function (e) {
     }
 });
 
-// Add entry to current purchase button
-$("#modalButtonLogin").click(function() {
+function performLogin() {
     var password = $("#modalPassword").val();
     var email = "loppis@rosenhorn.se";
     firebase.auth().signInAndRetrieveDataWithEmailAndPassword(email, password).catch(function(error) {
@@ -222,6 +221,18 @@ $("#modalButtonLogin").click(function() {
 
         console.log("Login failed with ", error);
     });
+
+}
+//
+// Add entry to current purchase button
+$("#modalButtonLogin").click(function() {
+    performLogin();
+});
+
+$("#modalPassword").on('keypress', function (e) {
+    if(e.which === 13){
+        performLogin();
+    }
 });
 
 $(document).ready(function(){

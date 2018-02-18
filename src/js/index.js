@@ -16,7 +16,8 @@ class Cart {
             id: this.counter++,
             seller: seller,
             amount: amount,
-            swish: swish
+            swish: swish,
+            dateString: "Feb 14, 15:30"
         };
 
         this.items.push(entry);
@@ -61,7 +62,9 @@ class Cart {
 
         var index = this.items.findIndex(finder);
         if (index > -1) {
-            this.items.splice(index, 1);
+            //this.items.splice(index, 1);
+            // Instead of removing the entry zero it, allows for a write only db model
+            this.items[index].amount = 0;
         }
     }
 

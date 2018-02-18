@@ -2,6 +2,18 @@ const SELLER_PREFIX = "A";
 
 const DB_INSTANCE = "vt18"
 
+function formatDate() {
+    let now = new Date();
+
+    let lookup = ["Jan", "Feb", "Mar", "Apr", "Maj", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"];
+
+    let monthIndex = now.getMonth();
+    let day = now.getDate();
+    let hour = now.getHours();
+    let minute = now.getMinutes();
+
+    return lookup[monthIndex] + " " + day + ", " + hour + ":" + minute;
+}
 
 function fbUpdateOrInsertSale(saleId, items) {
 

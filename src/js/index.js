@@ -17,7 +17,7 @@ class Cart {
             seller: seller,
             amount: amount,
             swish: swish,
-            dateString: "Feb 14, 15:30"
+            dateString: formatDate()
         };
 
         this.items.push(entry);

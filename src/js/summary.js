@@ -20,20 +20,19 @@ function renderSellerSummary(element, seller) {
         for(var propt in summary){
             let saleRow = summary[propt];
             saleRow.forEach(function(row) {
-                htmlRows += '  <tr><td><i class="fa fa-clock-o" aria-hidden="true"></i> ' + row.dateString + '</td><td>Swisch</td><td>' + row.amount + 'kr</td></tr>';
+                htmlRows += '  <tr><td><i class="fa fa-clock-o" aria-hidden="true"></i> ' + row.dateString + '</td><td></td><td>' + row.amount + 'kr</td></tr>';
                 totalAmount += row.amount;
             });
         }
 
 
         let major = totalAmount * 0.7;
-        let minor = totalAmount * 0.3;
 
         var summaryRow = "";
         if (seller === "CAFE") {
             summaryRow = "Swish: 150kr, kontant 210kr";
         } else {
-            summaryRow = "<b>" + major.toFixed(2) + "</b> (70%) - <b>" + minor.toFixed(2) + "kr</b> (30%)";
+            summaryRow = "<b>" + major.toFixed(2) + " kr</b> (70%)";
         }
 
 
@@ -70,7 +69,7 @@ function initTable() {
             '    <a class="card-title ">' + key + '</a>' +
             '  </div>' +
             '  <div id="collapse' + key + '" class="card-block collapse">' +
-            '  <table class="table table-striped" id="summaryTable"></table>' +
+            '  <table class="table table-striped" id="summaryTable"><tr><td>Laddar...</td></tr></table>' +
             '</div>' +
             '</div>';
 

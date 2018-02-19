@@ -185,6 +185,7 @@ $("#buttonCompletePurchase").click(function() {
 
     cart.reset();
     updateCurrentPurchaseHeader(cart.items.length);
+    $('#addEntrySeller').focus();
 });
 
 // Add entry to current purchase button
@@ -239,17 +240,17 @@ function validateAddEntrySeller() {
     let first = sellerValue[0];
 
     // Just the seller number should always validate
-    if (first === SELLER_PREFIX) {
+    if (sellerValue.length === 1 && first === SELLER_PREFIX) {
         return true;
     }
 
     // Validate and inject first letter
     if (first !== SELLER_PREFIX) {
         if (parseInt(first)) {
-            let newValue = SELLER_PREFIX + sellerValue;
-            sellerElem.val(newValue);
+            sellerValue = SELLER_PREFIX + sellerValue;
+            sellerElem.val(sellerValue);
+
         }
-        return true;
     }
 
     // Check that the rest is a number
@@ -261,8 +262,22 @@ function validateAddEntrySeller() {
     return true;
 }
 
+// Focus forwarders
+$("#addEntrySeller").on('keypress', function (e) {
+    if(e.which === 13){
+        $('#addEntryAmount').focus();
+    }
+});
+$("#addEntryAmount").on('keypress', function (e) {
+    if(e.which === 13){
+        $('#buttonAddEntry').focus();
+    }
+});
+
+
 // Validators for input fields
 $('#addEntrySeller').on('input', function() {
+
 
     var sellerElem = $("#addEntrySeller");
     if (validateAddEntrySeller()) {
@@ -325,6 +340,7 @@ $(document).ready(function(){
             console.log("User is not logged in");
             $('#exampleModal').modal('show');
         }
+        $('#addEntrySeller').focus();
     });
 
 //    for(i = 1; i <= 100; i++) {

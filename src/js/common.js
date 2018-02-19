@@ -41,7 +41,8 @@ function fbUpdateOrInsertSale(saleId, items) {
 
         updates[sumKey].push({
             "amount": entry.amount,
-            "dateString": entry.dateString
+            "dateString": entry.dateString,
+            "swish": entry.swish
         })
     });
 

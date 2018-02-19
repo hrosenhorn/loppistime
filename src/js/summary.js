@@ -13,15 +13,26 @@ function renderSellerSummary(element, seller) {
     console.log("Fetching sale summary for seller " + seller);
     firebase.database().ref(DB_INSTANCE + '/summaries/' + seller).once('value').then(function(snapshot) {
         let summary = snapshot.val();
-        console.log("SUMMARY", summary, typeof summary);
 
         var htmlRows = "";
         var totalAmount = 0;
+        var swish = 0;
+        var cash = 0;
         for(var propt in summary){
             let saleRow = summary[propt];
             saleRow.forEach(function(row) {
-                htmlRows += '  <tr><td><i class="fa fa-clock-o" aria-hidden="true"></i> ' + row.dateString + '</td><td></td><td>' + row.amount + 'kr</td></tr>';
                 totalAmount += row.amount;
+
+                if (row.swish === true) {
+                    swish += row.amount;
+                } else {
+                    cash += row.amount;
+                }
+
+                // Only append the rows for regular sellers
+                if (seller !== "CAFE") {
+                    htmlRows += '  <tr><td><i class="fa fa-clock-o" aria-hidden="true"></i> ' + row.dateString + '</td><td></td><td>' + row.amount + 'kr</td></tr>';
+                }
             });
         }
 
@@ -30,7 +41,7 @@ function renderSellerSummary(element, seller) {
 
         var summaryRow = "";
         if (seller === "CAFE") {
-            summaryRow = "Swish: 150kr, kontant 210kr";
+            summaryRow = "Swish: " + swish + "kr, kontant " + cash + "kr";
         } else {
             summaryRow = "<b>" + major.toFixed(2) + " kr</b> (70%)";
         }

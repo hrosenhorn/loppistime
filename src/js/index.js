@@ -236,11 +236,24 @@ function validateAddEntrySeller() {
         return false;
     }
 
-    if (sellerValue[0] !== SELLER_PREFIX) {
-        return false;
+    let first = sellerValue[0];
+
+    // Just the seller number should always validate
+    if (first === SELLER_PREFIX) {
+        return true;
     }
 
-    var rest = sellerValue.slice(1);
+    // Validate and inject first letter
+    if (first !== SELLER_PREFIX) {
+        if (parseInt(first)) {
+            let newValue = SELLER_PREFIX + sellerValue;
+            sellerElem.val(newValue);
+        }
+        return true;
+    }
+
+    // Check that the rest is a number
+    let rest = sellerValue.slice(1);
     if (!Number(rest)) {
         return false;
     }

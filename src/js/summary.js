@@ -1,4 +1,44 @@
 
+let purchases = {};
+let sellerSales = {};
+
+let calculateSellerSales = debounce(
+    function calculateSellerSales(seller) {
+
+        console.log("Calculating seller sales");
+
+        for(var propt in purchases){
+            let purchase = purchases[propt];
+            purchase.forEach(function(row) {
+                if (sellerSales[row.seller] === undefined) {
+                    sellerSales[row.seller] = 0;
+                }
+                sellerSales[row.seller] += row.amount;
+            });
+        }
+    },
+    500,
+    true
+);
+
+let renderSellerSales = debounce(
+    function renderSellerSales() {
+        console.log("Rendering seller sales");
+
+        for(var seller in sellerSales){
+            let key = "#summary-" + seller;
+
+            let major = sellerSales[seller] * 0.7;
+
+            $(key).hide();
+            $(key).text(major.toFixed(2) + " kr (70%)");
+            $(key).fadeIn( "slow" );
+        }
+    },
+    500,
+    true
+);
+
 function renderSellerSummary(element, seller) {
 
     var rawState = $(element).find(".card-header").attr("aria-expanded");
@@ -10,17 +50,16 @@ function renderSellerSummary(element, seller) {
         return;
     }
 
-    console.log("Fetching sale summary for seller " + seller);
-    firebase.database().ref(DB_INSTANCE + '/summaries/' + seller).once('value').then(function(snapshot) {
-        let summary = snapshot.val();
+    var htmlRows = "";
+    var totalAmount = 0;
+    var swish = 0;
+    var cash = 0;
 
-        var htmlRows = "";
-        var totalAmount = 0;
-        var swish = 0;
-        var cash = 0;
-        for(var propt in summary){
-            let saleRow = summary[propt];
-            saleRow.forEach(function(row) {
+    console.log("Fetching sale summary for seller " + seller);
+    for(var propt in purchases){
+        let purchase = purchases[propt];
+        purchase.forEach(function(row) {
+            if (row.seller === seller) {
                 totalAmount += row.amount;
 
                 if (row.swish === true) {
@@ -33,30 +72,27 @@ function renderSellerSummary(element, seller) {
                 if (seller !== "CAFE") {
                     htmlRows += '  <tr><td><i class="fa fa-clock-o" aria-hidden="true"></i> ' + row.dateString + '</td><td></td><td>' + row.amount + 'kr</td></tr>';
                 }
-            });
-        }
+            }
+        });
+    }
+
+    let major = totalAmount * 0.7;
+
+    var summaryRow = "";
+    if (seller === "CAFE") {
+        summaryRow = "Swish: " + swish + "kr, kontant " + cash + "kr";
+    } else {
+        summaryRow = "<b>" + major.toFixed(2) + " kr</b> (70%)";
+    }
 
 
-        let major = totalAmount * 0.7;
+    let table =
+    '<table class="table table-striped" id="summaryTable">' +
+    htmlRows +
+    '  <tr><td>Totalt <b>' + totalAmount + ' kr</b></td><td colspan="2">' + summaryRow + '</td></tr>' +
+    '</table>';
 
-        var summaryRow = "";
-        if (seller === "CAFE") {
-            summaryRow = "Swish: " + swish + "kr, kontant " + cash + "kr";
-        } else {
-            summaryRow = "<b>" + major.toFixed(2) + " kr</b> (70%)";
-        }
-
-
-        let table =
-        '<table class="table table-striped" id="summaryTable">' +
-        htmlRows +
-        '  <tr><td>Totalt <b>' + totalAmount + ' kr</b></td><td colspan="2">' + summaryRow + '</td></tr>' +
-        '</table>';
-
-        $(elem).html(table);
-    });
-
-
+    $(elem).html(table);
 
     console.log("Element clicked with ", isExpanding, seller);
 }
@@ -77,7 +113,8 @@ function initTable() {
         let card =
             '<div class="card mt-3">' +
             '  <div class="card-header collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse' + key + '">' +
-            '    <a class="card-title ">' + key + '</a>' +
+
+            '    <div class="float-left"><a class="card-title ">' + key + '</a></div><div id="summary-' + key + '" class="float-right"></div>' +
             '  </div>' +
             '  <div id="collapse' + key + '" class="card-block collapse">' +
             '  <table class="table table-striped" id="summaryTable"><tr><td>Laddar...</td></tr></table>' +
@@ -110,7 +147,6 @@ function initTable() {
 
         $('.container').find(".row").last().after(rowElem);
     }
-
 }
 
 function updateEntry(key, amount, effect = false) {
@@ -123,45 +159,32 @@ function updateEntry(key, amount, effect = false) {
     $(contentKey).html(SELLER_PREFIX + '' + key  + ' - ' + amount + ' kr');
 
     if (effect) {
-      $(divKey).fadeIn( "slow" );
+      $(divKey).fadeIn("slow");
     }
 }
 
 $(document).ready(function(){
     initTable();
 
-//    firebase.database().ref(DB_INSTANCE + '/summary').once('value').then(function(snapshot) {
-//        let summary = snapshot.val();
-//
-//        for(i = 1; i <= 100; i++) {
-//
-//            let index = SELLER_PREFIX + i;
-//            let entry = summary[index];
-//            if (entry) {
-//            console.log("Setting ", i, entry.amount);
-//                //updateEntry(i, entry.amount);
-//            }
-//        }
-//    });
-//
-//
-//    firebase.database().ref().child(DB_INSTANCE + '/purchases')
-//    .orderByChild("seller").equalTo("A1")
-//    .once('value').then(function(snapshot) {
-//        console.log("GOT", snapshot);
-//    });
+    let purchaseRef = firebase.database().ref(DB_INSTANCE + '/purchases');
+    purchaseRef.on('child_added', function(data) {
+        purchases[data.key] = data.val();
+        calculateSellerSales();
+        renderSellerSales();
 
+    });
 
-    let summaryRef = firebase.database().ref(DB_INSTANCE + '/summary');
-//    summaryRef.on('child_added', function(data) {
-//        let key = data.key.slice(1);
-//        console.log("Im added", key, data.val().amount);
-//        updateEntry(key, data.val().amount, true);
-//    });
-//    summaryRef.on('child_changed', function(data) {
-//        let key = data.key.slice(1);
-//        console.log("Im changed", key, data.val().amount);
-//        updateEntry(key, data.val().amount, true);
-//    });
+    purchaseRef.on('child_changed', function(data) {
+        console.log("Child changed", data.val());
+        purchases[data.key] = data.val();
+        calculateSellerSales();
+        renderSellerSales();
+    });
+
+    setTimeout(function () {
+        console.log("Forcing summary re rendering");
+        calculateSellerSales();
+        renderSellerSales();
+    }, 3000);
 
 });

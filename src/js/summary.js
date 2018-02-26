@@ -90,6 +90,7 @@ function renderSellerSummary(element, seller) {
     '<table class="table table-striped" id="summaryTable">' +
     htmlRows +
     '  <tr><td>Totalt <b>' + totalAmount + ' kr</b></td><td colspan="2">' + summaryRow + '</td></tr>' +
+    '  <tr><td colspan="2"><button type="button" class="btn btn-primary btn-lg btn-block">Skicka kvitto</button></td></tr>' +
     '</table>';
 
     $(elem).html(table);

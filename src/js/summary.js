@@ -2,8 +2,18 @@
 let purchases = {};
 let sellerSales = {};
 
+
+function formatAmount(input) {
+    return new Intl.NumberFormat('se-SE', { }).format(input)
+}
+
 let calculateSellerSales = debounce(
     function calculateSellerSales(seller) {
+        var itemSales = 0;
+        var totalItems = 0;
+        var cafeSales = 0;
+        var cafeSwish = 0;
+        var cafeCash = 0;
 
         console.log("Calculating seller sales");
 
@@ -14,10 +24,31 @@ let calculateSellerSales = debounce(
                     sellerSales[row.seller] = 0;
                 }
                 sellerSales[row.seller] += row.amount;
+
+                if (seller === "CAFE") {
+                    cafeSales += row.amount;
+
+                    if (row.swish === true) {
+                        cafeSwish += row.amount;
+                    } else {
+                        cafeCash += row.amount;
+                    }
+                } else {
+                    itemSales += row.amount;
+                    totalItems += 1;
+                }
             });
         }
+
+        $("#sumTotalSaleHeader").text("Total försäljning " + formatAmount(itemSales + cafeSales) + "kr");
+        $("#sumTotalSaleBody").text("Kläder " + formatAmount(itemSales) + " kr - Cafe " + formatAmount(cafeSales) + " kr");
+
+
+        let itemProfit = itemSales * 0.3;
+        $("#sumTotalProfitHeader").text("Totala intäckter " + formatAmount(itemProfit + cafeSales) + "kr");
+        $("#sumTotalProfitBody").text("Kläder " + formatAmount(itemProfit) + " kr - Cafe swish" + formatAmount(cafeSwish) + " kr - Cafe kontant " + formatAmount(cafeCash) + " kr");
     },
-    500,
+    250,
     true
 );
 
@@ -35,7 +66,7 @@ let renderSellerSales = debounce(
             $(key).fadeIn( "slow" );
         }
     },
-    500,
+    250,
     true
 );
 

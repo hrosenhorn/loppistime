@@ -17,42 +17,31 @@ const mailTransport = nodemailer.createTransport({
   },
 });
 
-const APP_NAME = 'Cloud Storage for Firebase quickstart';
+const APP_NAME = 'Kvitto på ditt från S:t Pers barnloppis';
 
-exports.sendWelcomeEmail = functions.auth.user().onCreate((event) => {
-  const user = event.data; // The Firebase user.
+exports.sendReceipt = functions.database.ref('/mailqueue')
+    .onWrite(event => {
+        const payload = event.data;
+        console.log("Triggered with", payload);
 
-  const email = user.email; // The email of the user.
-  const displayName = user.displayName; // The display name of the user.
+        const email = payload.email;
+        const content = payload.content;
 
-  return sendWelcomeEmail(email, displayName);
+
+  return sendReceipt(email, content);
 });
 
 // Sends a welcome email to the given user.
-function sendWelcomeEmail(email, displayName) {
+function sendReceipt(email, content) {
   const mailOptions = {
-    from: `${APP_NAME} <noreply@firebase.com>`,
+    from: `${APP_NAME} <loppistime@gmail.com>`,
     to: email,
   };
 
   // The user subscribed to the newsletter.
   mailOptions.subject = `Welcome to ${APP_NAME}!`;
-  mailOptions.text = `Hey ${displayName || ''}! Welcome to ${APP_NAME}. I hope you will enjoy our service.`;
+  mailOptions.text = `Hej! Welcome to ${APP_NAME}. Här har du en blob ${content}`;
   return mailTransport.sendMail(mailOptions).then(() => {
     return console.log('New welcome email sent to:', email);
-  });
-}
-
-function sendGoodbyEmail(email, displayName) {
-  const mailOptions = {
-    from: `${APP_NAME} <noreply@firebase.com>`,
-    to: email,
-  };
-
-  // The user unsubscribed to the newsletter.
-  mailOptions.subject = `Bye!`;
-  mailOptions.text = `Hey ${displayName || ''}!, We confirm that we have deleted your ${APP_NAME} account.`;
-  return mailTransport.sendMail(mailOptions).then(() => {
-    return console.log('Account deletion confirmation email sent to:', email);
   });
 }

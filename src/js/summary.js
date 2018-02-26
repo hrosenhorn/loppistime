@@ -111,23 +111,48 @@ function renderSellerSummary(element, seller) {
 
     var summaryRow = "";
     if (seller === "CAFE") {
-        summaryRow = "Swish: " + swish + "kr, kontant " + cash + "kr";
+        summaryRow = "Swish: " + swish + " kr, kontant " + cash + " kr";
     } else {
         summaryRow = "<b>" + major.toFixed(2) + " kr</b> (70%)";
     }
-
 
     let table =
     '<table class="table table-striped" id="summaryTable">' +
     htmlRows +
     '  <tr><td>Totalt <b>' + totalAmount + ' kr</b></td><td colspan="2">' + summaryRow + '</td></tr>' +
-    '  <tr><td colspan="2"><button type="button" class="btn btn-primary btn-lg btn-block">Skicka kvitto</button></td></tr>' +
+    '  <tr><td colspan="2"><button type="button" class="btn btn-primary btn-lg btn-block" id="receiptButton' + seller + '" data-seller="' + seller + '" onClick="toggleReceiptButton(this);">Skicka kvitto</button></td></tr>' +
     '</table>';
 
     $(elem).html(table);
 
     console.log("Element clicked with ", isExpanding, seller);
 }
+
+
+// Invoked when clicking the "receipt button", triggers modal and sets seller input field
+function toggleReceiptButton(e) {
+    let seller = e.dataset.seller;
+    $("#modalReceiptSeller").val(seller);
+    $('#receiptModal').modal('show');
+}
+
+// Invoked when the send button is clicked in the receipt modal
+function modalConfirmSendMail(e) {
+
+    let email = $("#modalReceiptEmail").val();
+    let seller = $("#modalReceiptSeller").val();
+
+    console.log("Modal clicked, sending email" + email, seller);
+
+    $('#receiptModal').modal('hide');
+
+    firebase.database().ref('mailqueue').set({
+        email: email,
+        content: "Test content"
+    });
+
+}
+
 
 function initTable() {
     let index = 1;

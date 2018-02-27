@@ -67,6 +67,6 @@ function debounce(func, wait, immediate) {
 		timeout = setTimeout(later, wait);
 		if (callNow) func.apply(context, args);
 	};
-};
+}
 
 //https://stackoverflow.com/questions/43929230/query-nested-data-from-firebase-real-time-database-android?rq=1

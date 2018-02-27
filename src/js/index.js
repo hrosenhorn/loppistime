@@ -180,7 +180,7 @@ $("#buttonCompletePurchase").click(function() {
         return
     }
 
-    let saleId = fbUpdateOrInsertSale(cart.saleId, cart.items)
+    let saleId = fbUpdateOrInsertSale(cart.saleId, cart.items);
     purchaseHistory.addEntry(saleId, cart.items);
 
     cart.reset();

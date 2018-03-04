@@ -74,6 +74,13 @@ class Cart {
         this.reset();
     }
 
+    setPaymentOption(swish) {
+        this.items.forEach(function(entry) {
+        console.log("SETTING TO", entry, swish);
+            entry.swish = swish;
+        });
+    }
+
     /**
         Adds items to the internal cart
         - Manages default state
@@ -259,8 +266,6 @@ $("#addEntryAmount").on('keypress', function (e) {
 });
 
 
-
-
 //https://stackoverflow.com/questions/43929230/query-nested-data-from-firebase-real-time-database-android?rq=1
 
 function validateAddEntryAmount() {
@@ -311,7 +316,6 @@ function validateAddEntrySeller() {
 }
 
 
-
 $('#addEntryAmount').on('input', function() {
     var amountElem = $("#addEntryAmount");
 
@@ -322,7 +326,6 @@ $('#addEntryAmount').on('input', function() {
     }
 });
 
-
 // Complete purchase button
 $("#buttonCompletePurchase").click(function() {
     console.log("Handler for buttonCompletePurchase called.");
@@ -330,6 +333,9 @@ $("#buttonCompletePurchase").click(function() {
         console.log("Complete purchase with empty cart pressed, ignoring.");
         return
     }
+
+    let paymentOption = $('input[name=paymentOption]:checked').val();
+    cart.setPaymentOption(paymentOption === "swish")
 
     let saleId = fbUpdateOrInsertSale(cart.saleId, cart.items);
     purchaseHistory.addEntry(saleId, cart.items);

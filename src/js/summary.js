@@ -25,7 +25,7 @@ let calculateSellerSales = debounce(
                 }
                 sellerSales[row.seller] += row.amount;
 
-                if (seller === "CAFE") {
+                if (row.seller === "CAFE") {
                     cafeSales += row.amount;
 
                     if (row.swish === true) {
@@ -46,7 +46,7 @@ let calculateSellerSales = debounce(
 
         let itemProfit = itemSales * 0.3;
         $("#sumTotalProfitHeader").text("Totala intäckter " + formatAmount(itemProfit + cafeSales) + "kr");
-        $("#sumTotalProfitBody").text("Kläder " + formatAmount(itemProfit) + " kr - Cafe swish" + formatAmount(cafeSwish) + " kr - Cafe kontant " + formatAmount(cafeCash) + " kr");
+        $("#sumTotalProfitBody").text("Kläder " + formatAmount(itemProfit) + " kr - Cafe swish " + formatAmount(cafeSwish) + " kr - Cafe kontant " + formatAmount(cafeCash) + " kr");
     },
     250,
     true

@@ -17,11 +17,11 @@ const mailTransport = nodemailer.createTransport({
   },
 });
 
-const APP_NAME = 'Kvitto på ditt från S:t Pers barnloppis';
+const APP_NAME = 'S:t Pers barnloppis';
 
-exports.sendReceipt = functions.database.ref('/mailqueue')
+exports.sendReceipt = functions.database.ref('/mailqueue/{id}')
     .onWrite(event => {
-        const payload = event.data;
+        const payload = event.data.val();
         console.log("Triggered with", payload);
 
         const email = payload.email;
@@ -39,7 +39,7 @@ function sendReceipt(email, content) {
   };
 
   // The user subscribed to the newsletter.
-  mailOptions.subject = `Welcome to ${APP_NAME}!`;
+  mailOptions.subject = `Kvitto på ditt köp från ${APP_NAME}!`;
   mailOptions.text = `Hej! Welcome to ${APP_NAME}. Här har du en blob ${content}`;
   return mailTransport.sendMail(mailOptions).then(() => {
     return console.log('New welcome email sent to:', email);

@@ -146,11 +146,13 @@ function modalConfirmSendMail(e) {
 
     $('#receiptModal').modal('hide');
 
-    firebase.database().ref('mailqueue').set({
+    let newRef = firebase.database().ref('mailqueue').push();
+
+
+    newRef.set({
         email: email,
         content: "Test content"
     });
-
 }
 
 

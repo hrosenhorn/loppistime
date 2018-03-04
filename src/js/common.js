@@ -69,4 +69,275 @@ function debounce(func, wait, immediate) {
 	};
 }
 
+class Cart {
+    constructor() {
+        this.reset();
+    }
+
+    /**
+        Adds items to the internal cart
+        - Manages default state
+        - Updates HTML with elements
+        - Appends element to second last in TR list (last elem is the complete purchase button)
+    */
+    addEntry(seller, amount, swish) {
+        var entry = {
+            id: this.counter++,
+            seller: seller,
+            amount: amount,
+            swish: swish,
+            dateString: formatDate()
+        };
+
+        this.items.push(entry);
+
+        // If this is the first element clear default state
+        if (this.defaultState) {
+            $('#shoppingCart tr').first().hide();
+            this.defaultState = false;
+        }
+
+        // Create a new element to be added to the table
+        var elem = $.parseHTML('<tr>' +
+            '<td><i class="fa fa-user" aria-hidden="true"></i> ' + entry.seller + '</td>' +
+            '<td>' + entry.amount + ' kr</td><td><i class="fa fa-trash shopping-trash" aria-hidden="true" data-counter="' + entry.id + '"></i></td>' +
+            '</tr>');
+
+        // Bind an event to handle clicking the trash icon
+        $(elem).bind('click', this.onTrashcanClicked.bind(this));
+
+        // The last element is the complete purchase button
+        $('#shoppingCart')
+            .find('tr')
+            .last()
+            .prev()
+            .after(elem);
+    }
+
+    /*
+        Removes the element in the cart and removes the corresponding HTML element
+    */
+    onTrashcanClicked(event) {
+        var id = parseInt(event.target.dataset["counter"]);
+        this.removeEntry(id);
+        $(event.currentTarget).remove();
+
+    }
+
+    removeEntry(id) {
+        function finder(entry) {
+            return entry["id"] === id;
+        }
+
+        var index = this.items.findIndex(finder);
+        if (index > -1) {
+            //this.items.splice(index, 1);
+            // Instead of removing the entry zero it, allows for a write only db model
+            this.items[index].amount = 0;
+        }
+    }
+
+    /*
+        Resets the card by removing all items and resetting to default state
+    */
+    reset() {
+        this.items = [];
+        this.counter = 0;
+        this.saleId = null;
+        this.defaultState = true;
+        $('#shoppingCart tr').first().show();
+        $('#shoppingCart tr').not(':first').not(':last').remove();
+    }
+
+    /*
+        Load iems from history, resets internal cart state
+    */
+    loadItems(saleId, items) {
+        this.reset();
+        this.saleId = saleId;
+        let self = this;
+        items.forEach(function(entry) {
+            self.addEntry(entry.seller, entry.amount, entry.swish);
+        });
+
+    }
+}
+
+class History {
+    constructor() {
+        this.defaultState = true;
+        this.items = {};
+    }
+
+    /*
+        Add a completed purchase to the history.
+        - Save entire cart state
+        - If this is an update remove previous HTML entry
+          - Purchases are stored by saleId to entry will be overwritten
+        - Compute summary element
+        - Update HTMl listing with element
+        - Manage default state
+    */
+    addEntry(saleId, cartItems) {
+
+        console.log("Removing ", saleId);
+        $("#" + saleId).remove();
+
+        let itemCount = 0;
+        let total = 0;
+        cartItems.forEach(function(entry) {
+            itemCount++;
+            total += entry["amount"];
+        });
+
+        let entry = {
+            items: itemCount,
+            amount: total
+        };
+
+        this.items[saleId] = cartItems;
+
+        // If this is the first element clear default state
+        if (this.defaultState) {
+            $('#purchaseHistory tr').first().hide();
+            this.defaultState = false;
+        }
+
+        // Create a new element to be added to the table
+        var elem = $.parseHTML('<tr id="' + saleId + '">' +
+            '<td><i class="fa fa-shopping-bag" aria-hidden="true"></i> ' + entry.items + '</td>' +
+            '<td>' + entry.amount + ' kr</td>' +
+            '</tr>');
+
+        // Bind an event to handle editing histoy and loading into cart
+        $(elem).bind('click', loadCart.bind(null, saleId));
+
+        // The last element is the complete purchase button
+        $('#purchaseHistory tr').first().after(elem);
+
+        // Only keep 15 items in the UI
+        $( "#purchaseHistory tr" ).slice(15).remove();
+    }
+}
+
+let cart = new Cart();
+let purchaseHistory = new History();
+
+/*
+    Load a history item into current cart
+    - Reset cart state
+    - Load entries
+*/
+function loadCart(saleId) {
+    console.log("Wanted to reload cart with", saleId);
+    let items = purchaseHistory.items[saleId];
+    if (items !== null) {
+        cart.loadItems(saleId, items);
+    }
+}
+
+// Handlers
+
+function updateCurrentPurchaseHeader (items) {
+    let elem = $("#currentPurchaseHeader");
+    if (items === 0) {
+        elem.text("Pågående köp");
+    } else {
+        if (items === 1) {
+            elem.text("Pågående köp - " + items + " vara");
+        } else {
+            elem.text("Pågående köp - " + items + " varor");
+        }
+
+    }
+}
+
+$("#addEntryAmount").on('keypress', function (e) {
+    if(e.which === 13){
+        $('#buttonAddEntry').focus();
+    }
+});
+
+
+
+
 //https://stackoverflow.com/questions/43929230/query-nested-data-from-firebase-real-time-database-android?rq=1
+
+function validateAddEntryAmount() {
+    let amountElem = $("#addEntryAmount");
+    if (!Number(amountElem.val())) {
+        return false;
+    }
+
+    return true;
+}
+
+
+function validateAddEntrySeller() {
+    var sellerElem = $("#addEntrySeller");
+    var sellerValue = sellerElem.val();
+
+    if (sellerValue.length <= 0) {
+        return false;
+    }
+
+    if (sellerValue === "CAFE") {
+        return true;
+    }
+
+    let first = sellerValue[0];
+
+    // Just the seller number should always validate
+    if (sellerValue.length === 1 && first === SELLER_PREFIX) {
+        return true;
+    }
+
+    // Validate and inject first letter
+    if (first !== SELLER_PREFIX) {
+        if (parseInt(first)) {
+            sellerValue = SELLER_PREFIX + sellerValue;
+            sellerElem.val(sellerValue);
+
+        }
+    }
+
+    // Check that the rest is a number
+    let rest = sellerValue.slice(1);
+    if (!Number(rest)) {
+        return false;
+    }
+
+    return true;
+}
+
+
+
+$('#addEntryAmount').on('input', function() {
+    var amountElem = $("#addEntryAmount");
+
+    if (validateAddEntryAmount()) {
+        $(amountElem).css('color', '#000000');
+    } else {
+        $(amountElem).css('color', '#c82333');
+    }
+});
+
+
+// Complete purchase button
+$("#buttonCompletePurchase").click(function() {
+    console.log("Handler for buttonCompletePurchase called.");
+    if (cart.items.length <= 0) {
+        console.log("Complete purchase with empty cart pressed, ignoring.");
+        return
+    }
+
+    let saleId = fbUpdateOrInsertSale(cart.saleId, cart.items);
+    purchaseHistory.addEntry(saleId, cart.items);
+
+    cart.reset();
+    updateCurrentPurchaseHeader(cart.items.length);
+    $('#addEntrySeller').focus();
+});
+
+
+

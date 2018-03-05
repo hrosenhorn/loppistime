@@ -12,3 +12,6 @@ Built using Firebase so go here for docs https://firebase.google.com/docs/
 
 
 https://github.com/firebase/functions-samples/tree/master/quickstarts/email-users
+
+
+Email template taken from https://github.com/sparksuite/simple-html-invoice-template

@@ -30,7 +30,7 @@ const CONTENT =
 '<html>' +
 '<head>' +
 '    <meta charset="utf-8">' +
-'    <title>A simple, clean, and responsive HTML invoice template</title>' +
+'    <title>Kvitto från ditt klädköp</title>' +
 '    ' +
 '    <style>' +
 '    .invoice-box {' +

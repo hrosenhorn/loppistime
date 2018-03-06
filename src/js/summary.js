@@ -215,7 +215,7 @@ function initTable() {
     }
 }
 
-function updateEntry(key, amount, effect = false) {
+function updateEntry(key, amount, effect) {
     let divKey = '#X' + key;
     let contentKey = '#Y' + key;
 

@@ -69,113 +69,108 @@ function debounce(func, wait, immediate) {
 	};
 }
 
-class Cart {
-    constructor() {
-        this.reset();
+function Cart () {
+    this.reset();
+}
+
+Cart.prototype.setPaymentOption = function(swish) {
+    this.items.forEach(function(entry) {
+    console.log("SETTING TO", entry, swish);
+        entry.swish = swish;
+    });
+};
+
+/**
+    Adds items to the internal cart
+    - Manages default state
+    - Updates HTML with elements
+    - Appends element to second last in TR list (last elem is the complete purchase button)
+*/
+Cart.prototype.addEntry = function(seller, amount, swish) {
+    var entry = {
+        id: this.counter++,
+        seller: seller,
+        amount: amount,
+        swish: swish,
+        dateString: formatDate()
+    };
+
+    this.items.push(entry);
+
+    // If this is the first element clear default state
+    if (this.defaultState) {
+        $('#shoppingCart tr').first().hide();
+        this.defaultState = false;
     }
 
-    setPaymentOption(swish) {
-        this.items.forEach(function(entry) {
-        console.log("SETTING TO", entry, swish);
-            entry.swish = swish;
-        });
-    }
+    // Create a new element to be added to the table
+    var elem = $.parseHTML('<tr>' +
+        '<td><i class="fa fa-user" aria-hidden="true"></i> ' + entry.seller + '</td>' +
+        '<td>' + entry.amount + ' kr</td><td><i class="fa fa-trash shopping-trash" aria-hidden="true" data-counter="' + entry.id + '"></i></td>' +
+        '</tr>');
 
-    /**
-        Adds items to the internal cart
-        - Manages default state
-        - Updates HTML with elements
-        - Appends element to second last in TR list (last elem is the complete purchase button)
-    */
-    addEntry(seller, amount, swish) {
-        var entry = {
-            id: this.counter++,
-            seller: seller,
-            amount: amount,
-            swish: swish,
-            dateString: formatDate()
-        };
+    // Bind an event to handle clicking the trash icon
+    $(elem).bind('click', this.onTrashcanClicked.bind(this));
 
-        this.items.push(entry);
-
-        // If this is the first element clear default state
-        if (this.defaultState) {
-            $('#shoppingCart tr').first().hide();
-            this.defaultState = false;
-        }
-
-        // Create a new element to be added to the table
-        var elem = $.parseHTML('<tr>' +
-            '<td><i class="fa fa-user" aria-hidden="true"></i> ' + entry.seller + '</td>' +
-            '<td>' + entry.amount + ' kr</td><td><i class="fa fa-trash shopping-trash" aria-hidden="true" data-counter="' + entry.id + '"></i></td>' +
-            '</tr>');
-
-        // Bind an event to handle clicking the trash icon
-        $(elem).bind('click', this.onTrashcanClicked.bind(this));
-
-        // The last element is the complete purchase button
-        $('#shoppingCart')
-            .find('tr')
-            .last()
-            .prev()
-            .after(elem);
-    }
+    // The last element is the complete purchase button
+    $('#shoppingCart')
+        .find('tr')
+        .last()
+        .prev()
+        .after(elem);
+};
 
     /*
         Removes the element in the cart and removes the corresponding HTML element
     */
-    onTrashcanClicked(event) {
-        var id = parseInt(event.target.dataset["counter"]);
-        this.removeEntry(id);
-        $(event.currentTarget).remove();
+Cart.prototype.onTrashcanClicked = function(event) {
+    var id = parseInt(event.target.dataset["counter"]);
+    this.removeEntry(id);
+    $(event.currentTarget).remove();
+};
 
+Cart.prototype.removeEntry = function(id) {
+    function finder(entry) {
+        return entry["id"] === id;
     }
 
-    removeEntry(id) {
-        function finder(entry) {
-            return entry["id"] === id;
-        }
-
-        var index = this.items.findIndex(finder);
-        if (index > -1) {
-            //this.items.splice(index, 1);
-            // Instead of removing the entry zero it, allows for a write only db model
-            this.items[index].amount = 0;
-        }
+    var index = this.items.findIndex(finder);
+    if (index > -1) {
+        //this.items.splice(index, 1);
+        // Instead of removing the entry zero it, allows for a write only db model
+        this.items[index].amount = 0;
     }
+};
 
     /*
         Resets the card by removing all items and resetting to default state
     */
-    reset() {
-        this.items = [];
-        this.counter = 0;
-        this.saleId = null;
-        this.defaultState = true;
-        $('#shoppingCart tr').first().show();
-        $('#shoppingCart tr').not(':first').not(':last').remove();
-    }
+Cart.prototype.reset = function() {
+    this.items = [];
+    this.counter = 0;
+    this.saleId = null;
+    this.defaultState = true;
+    $('#shoppingCart tr').first().show();
+    $('#shoppingCart tr').not(':first').not(':last').remove();
+};
 
     /*
         Load iems from history, resets internal cart state
     */
-    loadItems(saleId, items) {
-        this.reset();
-        this.saleId = saleId;
-        let self = this;
-        items.forEach(function(entry) {
-            self.addEntry(entry.seller, entry.amount, entry.swish);
-        });
+Cart.prototype.loadItems = function(saleId, items) {
+    this.reset();
+    this.saleId = saleId;
+    let self = this;
+    items.forEach(function(entry) {
+        self.addEntry(entry.seller, entry.amount, entry.swish);
+    });
+};
 
-    }
+
+function History () {
+    this.defaultState = true;
+    this.items = {};
 }
-
-class History {
-    constructor() {
-        this.defaultState = true;
-        this.items = {};
-    }
-
     /*
         Add a completed purchase to the history.
         - Save entire cart state
@@ -185,47 +180,47 @@ class History {
         - Update HTMl listing with element
         - Manage default state
     */
-    addEntry(saleId, cartItems) {
+History.prototype.addEntry = function (saleId, cartItems) {
 
-        console.log("Removing ", saleId);
-        $("#" + saleId).remove();
+    console.log("Removing ", saleId);
+    $("#" + saleId).remove();
 
-        let itemCount = 0;
-        let total = 0;
-        cartItems.forEach(function(entry) {
-            itemCount++;
-            total += entry["amount"];
-        });
+    let itemCount = 0;
+    let total = 0;
+    cartItems.forEach(function(entry) {
+        itemCount++;
+        total += entry["amount"];
+    });
 
-        let entry = {
-            items: itemCount,
-            amount: total
-        };
+    let entry = {
+        items: itemCount,
+        amount: total
+    };
 
-        this.items[saleId] = cartItems;
+    this.items[saleId] = cartItems;
 
-        // If this is the first element clear default state
-        if (this.defaultState) {
-            $('#purchaseHistory tr').first().hide();
-            this.defaultState = false;
-        }
-
-        // Create a new element to be added to the table
-        var elem = $.parseHTML('<tr id="' + saleId + '">' +
-            '<td><i class="fa fa-shopping-bag" aria-hidden="true"></i> ' + entry.items + '</td>' +
-            '<td>' + entry.amount + ' kr</td>' +
-            '</tr>');
-
-        // Bind an event to handle editing histoy and loading into cart
-        $(elem).bind('click', loadCart.bind(null, saleId));
-
-        // The last element is the complete purchase button
-        $('#purchaseHistory tr').first().after(elem);
-
-        // Only keep 15 items in the UI
-        $( "#purchaseHistory tr" ).slice(15).remove();
+    // If this is the first element clear default state
+    if (this.defaultState) {
+        $('#purchaseHistory tr').first().hide();
+        this.defaultState = false;
     }
-}
+
+    // Create a new element to be added to the table
+    var elem = $.parseHTML('<tr id="' + saleId + '">' +
+        '<td><i class="fa fa-shopping-bag" aria-hidden="true"></i> ' + entry.items + '</td>' +
+        '<td>' + entry.amount + ' kr</td>' +
+        '</tr>');
+
+    // Bind an event to handle editing histoy and loading into cart
+    $(elem).bind('click', loadCart.bind(null, saleId));
+
+    // The last element is the complete purchase button
+    $('#purchaseHistory tr').first().after(elem);
+
+    // Only keep 15 items in the UI
+    $( "#purchaseHistory tr" ).slice(15).remove();
+};
+
 
 let cart = new Cart();
 let purchaseHistory = new History();

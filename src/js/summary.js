@@ -146,6 +146,7 @@ function modalConfirmSendMail(e) {
 
     $('#receiptModal').modal('hide');
 
+    $("#modalReceiptEmail").val("");
     let newRef = firebase.database().ref('mailqueue').push();
 
     for(var propt in purchases){
@@ -187,7 +188,7 @@ function initTable() {
             '</div>' +
             '</div>';
 
-        let cardElem = $.parseHTML(card)
+        let cardElem = $.parseHTML(card);
 
         $(cardElem).bind('click', renderSellerSummary.bind(null, cardElem, key));
         cards.push(cardElem);

@@ -155,7 +155,7 @@ const CONTENT =
 // Sends a welcome email to the given user.
 function sendReceipt(email, content) {
   const mailOptions = {
-    from: "St Pers klädloppis <loppistime@gmail.com>",
+    from: "St Pers barnloppis <loppistime@gmail.com>",
     to: email,
   };
 

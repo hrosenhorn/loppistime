@@ -148,10 +148,17 @@ function modalConfirmSendMail(e) {
 
     let newRef = firebase.database().ref('mailqueue').push();
 
+    for(var propt in purchases){
+        let purchase = purchases[propt];
+        purchase.forEach(function(row) {
+            if (row.seller === seller) {
+            }
+        })
+    }
 
     newRef.set({
         email: email,
-        content: "Test content"
+        content: seller
     });
 }
 

@@ -295,16 +295,23 @@ function validateAddEntrySeller() {
     // Validate and inject first letter
     if (first !== SELLER_PREFIX) {
         if (parseInt(first)) {
+
             sellerValue = SELLER_PREFIX + sellerValue;
             sellerElem.val(sellerValue);
-
+        } else {
+            sellerElem.val("");
         }
+
     }
 
     // Check that the rest is a number
     let rest = sellerValue.slice(1);
     if (!Number(rest)) {
         return false;
+    }
+
+    if (rest[0] === "0") {
+        sellerElem.val(SELLER_PREFIX + Number(rest));
     }
 
     return true;

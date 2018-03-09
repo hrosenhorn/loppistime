@@ -1,5 +1,10 @@
 
 const functions = require('firebase-functions');
+const admin = require('firebase-admin');
+const DB_INSTANCE = "vt18"
+
+admin.initializeApp(functions.config().firebase);
+
 const nodemailer = require('nodemailer');
 // Configure the email transport using the default SMTP transport and a GMail account.
 // For Gmail, enable these:
@@ -34,6 +39,7 @@ function formatDate() {
 
 const APP_NAME = 'S:t Pers barnloppis';
 
+const THANKS = 'Tack för att du har sålt på S:t Pers barnloppis, denna gång går 30% av pengarna till ett projekt som arbetar mot könsstympning av flickor i Tanzania. Här kan du läsa om vårt insamlingsmål: https://www.svenskakyrkan.se/internationelltarbete/p190';
 
 const CONTENT =
     '<!doctype html>' +
@@ -139,14 +145,7 @@ const CONTENT =
     '                <td colspan="2">' +
     '                    <table>' +
     '                        <tr>' +
-    '                            <td>' +
-    '                                S.t Per barnloppis<br>' +
-    '                                Kvarntorget 3<br>' +
-    '                                75421 Uppsala' +
-    '                            </td>' +
-    '                            ' +
-    '                            <td>' +
-    '                            </td>' +
+    '                            <td>' + THANKS + '</td>' +
     '                        </tr>' +
     '                    </table>' +
     '                </td>' +
@@ -175,39 +174,60 @@ exports.sendReceipt = functions.database.ref('/mailqueue/{id}')
 });
 
 // Sends a welcome email to the given user.
-function sendReceipt(email, content) {
-  const mailOptions = {
-    from: "St Pers barnloppis <loppistime@gmail.com>",
-    to: email
-  };
+function sendReceipt(email, seller) {
+      const mailOptions = {
+        from: "St Pers barnloppis <loppistime@gmail.com>",
+        to: email
+      };
 
-    let tmp = [1,2,3];
-    var items = '';
-    tmp.forEach(function(entry) {
+    admin.database().ref(DB_INSTANCE + '/purchases').once('value').then(function(snapshot) {
+        let summary = snapshot.val();
+
+
+        var items = '';
+        var totalAmount = 0;
+        for(var purchaseId in summary){
+            let purchase = summary[purchaseId];
+
+            purchase.forEach(function(row) {
+                if (row.seller === seller) {
+                    items +=
+                    '            <tr class="item">' +
+                    '                <td>Vara</td>' +
+                    '                <td>' + row.amount + ' kr</td>' +
+                    '            </tr>';
+
+                    totalAmount += row.amount;
+                }
+
+            });
+        }
+
+        let commision = totalAmount * 0.3
         items +=
-            '            <tr class="item">' +
-            '                <td>Kläder</td>' +
-            '                <td>' + (entry * 10) + ' kr</td>' +
-            '            </tr>';
-    });
-
-    let totalAmount = "130";
-    let total =
-        '            <tr class="total">' +
-        '                <td></td>' +
-        '                <td>Total: ' + totalAmount + ' kr</td>' +
+        '            <tr class="item">' +
+        '                <td>Välgörande ändamål (-30%)</td>' +
+        '                <td>-' + commision.toFixed(2) + ' kr</td>' +
         '            </tr>';
 
-    var content = CONTENT
-        .replace("[[RECEIPT_DATE]]", formatDate())
-        .replace("[[RECEIPT_ITEMS]]", items)
-        .replace("[[RECEIPT_TOTAL]]", total);
+        totalAmount = totalAmount * 0.7
+        let total =
+            '            <tr class="total">' +
+            '                <td></td>' +
+            '                <td>Total: ' + totalAmount.toFixed(2) + ' kr (70%)</td>' +
+            '            </tr>';
+
+        var content = CONTENT
+            .replace("[[RECEIPT_DATE]]", formatDate())
+            .replace("[[RECEIPT_ITEMS]]", items)
+            .replace("[[RECEIPT_TOTAL]]", total);
 
 
-  // The user subscribed to the newsletter.
-  mailOptions.subject = `Kvitto på ditt köp från ${APP_NAME}`;
-  mailOptions.html = content;
-  return mailTransport.sendMail(mailOptions).then(() => {
-    return console.log('New welcome email sent to:', email);
-  });
+        // The user subscribed to the newsletter.
+        mailOptions.subject = `Kvitto på ditt köp från ${APP_NAME}`;
+        mailOptions.html = content;
+        return mailTransport.sendMail(mailOptions).then(() => {
+            return console.log('New welcome email sent to:', email);
+        });
+    });
 }

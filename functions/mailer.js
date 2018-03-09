@@ -12,6 +12,13 @@ const mailTransport = nodemailer.createTransport({
 
 const APP_NAME = 'S:t Pers barnloppis';
 
+Date.prototype.getFullMinutes = function () {
+   if (this.getMinutes() < 10) {
+       return '0' + this.getMinutes();
+   }
+   return this.getMinutes();
+};
+
 function formatDate() {
     let now = new Date();
 
@@ -20,10 +27,12 @@ function formatDate() {
     let monthIndex = now.getMonth();
     let day = now.getDate();
     let hour = now.getHours();
-    let minute = now.getMinutes();
+    let minute = now.getFullMinutes();
 
     return lookup[monthIndex] + " " + day + ", " + hour + ":" + minute;
 }
+
+const THANKS = 'Tack för att du har sålt på S:t Pers barnloppis, denna gång går 30% av pengarna till ett projekt som arbetar mot könsstympning av flickor i Tanzania. Här kan du läsa om vårt insamlingsmål: https://www.svenskakyrkan.se/internationelltarbete/p190';
 
 const CONTENT =
 '<!doctype html>' +
@@ -129,14 +138,7 @@ const CONTENT =
 '                <td colspan="2">' +
 '                    <table>' +
 '                        <tr>' +
-'                            <td>' +
-'                                S.t Per barnloppis<br>' +
-'                                Kvarntorget 3<br>' +
-'                                75421 Uppsala' +
-'                            </td>' +
-'                            ' +
-'                            <td>' +
-'                            </td>' +
+'                            <td>' + THANKS + '</td>' +
 '                        </tr>' +
 '                    </table>' +
 '                </td>' +
@@ -182,11 +184,17 @@ function sendReceipt(email, content) {
     '            </tr>';
   });
 
-  let totalAmount = "130"
+    items +=
+    '            <tr class="item">' +
+    '                <td>Välgörande ändamål (-30%)</td>' +
+    '                <td>-' + 24 + ' kr</td>' +
+    '            </tr>';
+
+  let totalAmount = 130 * 0.7
   let total =
     '            <tr class="total">' +
     '                <td></td>' +
-    '                <td>Total: ' + totalAmount + ' kr</td>' +
+    '                <td>Total: ' + totalAmount.toFixed(2) + ' kr (70%)</td>' +
     '            </tr>';
 
   var content = CONTENT

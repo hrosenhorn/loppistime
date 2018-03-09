@@ -87,8 +87,8 @@ function renderSellerSummary(element, seller) {
     var cash = 0;
 
     console.log("Fetching sale summary for seller " + seller);
-    for(var propt in purchases){
-        let purchase = purchases[propt];
+    for(var purchaseId in purchases){
+        let purchase = purchases[purchaseId];
         purchase.forEach(function(row) {
             if (row.seller === seller) {
                 totalAmount += row.amount;
@@ -101,7 +101,7 @@ function renderSellerSummary(element, seller) {
 
                 // Only append the rows for regular sellers
                 if (seller !== "CAFE") {
-                    htmlRows += '  <tr><td><i class="fa fa-clock-o" aria-hidden="true"></i> ' + row.dateString + '</td><td></td><td>' + row.amount + 'kr</td></tr>';
+                    htmlRows += '  <tr><td><i class="fa fa-clock-o" aria-hidden="true"></i> ' + row.dateString + '</td><td></td><td>' + row.amount + 'kr</td><td><i class="fa fa-trash shopping-trash" aria-hidden="true" data-purchaseId="' + purchaseId + '" data-index="' + row.id + '"></i></td></tr>';
                 }
             }
         });
@@ -119,8 +119,8 @@ function renderSellerSummary(element, seller) {
     let table =
     '<table class="table table-striped" id="summaryTable">' +
     htmlRows +
-    '  <tr><td>Totalt <b>' + totalAmount + ' kr</b></td><td colspan="2">' + summaryRow + '</td></tr>' +
-    '  <tr><td colspan="2"><button type="button" class="btn btn-primary btn-lg btn-block" id="receiptButton' + seller + '" data-seller="' + seller + '" onClick="toggleReceiptButton(this);">Skicka kvitto</button></td></tr>' +
+    '  <tr><td>Totalt <b>' + totalAmount + ' kr</b></td><td colspan="3">' + summaryRow + '</td></tr>' +
+    '  <tr><td colspan="3"><button type="button" class="btn btn-primary btn-lg btn-block" id="receiptButton' + seller + '" data-seller="' + seller + '" onClick="toggleReceiptButton(this);">Skicka kvitto</button></td></tr>' +
     '</table>';
 
     $(elem).html(table);
@@ -149,20 +149,11 @@ function modalConfirmSendMail(e) {
     $("#modalReceiptEmail").val("");
     let newRef = firebase.database().ref('mailqueue').push();
 
-    for(var propt in purchases){
-        let purchase = purchases[propt];
-        purchase.forEach(function(row) {
-            if (row.seller === seller) {
-            }
-        })
-    }
-
     newRef.set({
         email: email,
         content: seller
     });
 }
-
 
 function initTable() {
     let index = 1;
@@ -170,10 +161,10 @@ function initTable() {
     var cards = [];
 
     // Generate all seller cards
-    for(i = 0; i < 101; i++) {
+    for(i = 0; i < 121; i++) {
         var key = SELLER_PREFIX + (i+1);
 
-        if (i === 100) {
+        if (i === 120) {
             key = "CAFE";
         }
 
@@ -181,7 +172,7 @@ function initTable() {
             '<div class="card mt-3">' +
             '  <div class="card-header collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse' + key + '">' +
 
-            '    <div class="float-left"><a class="card-title ">' + key + '</a></div><div id="summary-' + key + '" class="float-right"></div>' +
+            '    <div class="float-left"><a class="card-title ">' + key + '</a></div><div id="summary-' + key + '" class="float-right">0 kr</div>' +
             '  </div>' +
             '  <div id="collapse' + key + '" class="card-block collapse">' +
             '  <table class="table table-striped" id="summaryTable"><tr><td>Laddar...</td></tr></table>' +
@@ -195,7 +186,7 @@ function initTable() {
     }
 
     // Generate all rows and insert cards with listeners on each element
-    for(i = 0; i < 34; i++) {
+    for(i = 0; i < 44; i++) {
 
         let row =
         '<div class="row">' +

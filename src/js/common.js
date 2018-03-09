@@ -2,6 +2,13 @@ const SELLER_PREFIX = "A";
 
 const DB_INSTANCE = "vt18"
 
+Date.prototype.getFullMinutes = function () {
+   if (this.getMinutes() < 10) {
+       return '0' + this.getMinutes();
+   }
+   return this.getMinutes();
+};
+
 function formatDate() {
     let now = new Date();
 
@@ -31,22 +38,6 @@ function fbUpdateOrInsertSale(saleId, items) {
 
     // Generate the purchase order
     updates[DB_INSTANCE + '/purchases/' + refKey] = items;
-
-    var summaries = {};
-    items.forEach(function(entry) {
-        let sumKey = DB_INSTANCE + '/summaries/' + entry.seller  + '/' + refKey;
-        if (updates[sumKey] === undefined) {
-            updates[sumKey] = [];
-        }
-
-        updates[sumKey].push({
-            "amount": entry.amount,
-            "dateString": entry.dateString,
-            "swish": entry.swish
-        })
-    });
-
-
 
     console.log("Doing batch update with", updates);
     firebase.database().ref().update(updates);

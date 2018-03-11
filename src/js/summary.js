@@ -1,7 +1,6 @@
 
 let purchases = {};
-let sellerSales = {};
-
+var sellerSales = {};
 
 function formatAmount(input) {
     return new Intl.NumberFormat('se-SE', { }).format(input)
@@ -9,6 +8,7 @@ function formatAmount(input) {
 
 let calculateSellerSales = debounce(
     function calculateSellerSales(seller) {
+        sellerSales = {};
         var itemSales = 0;
         var totalItems = 0;
         var cafeSales = 0;
@@ -70,16 +70,39 @@ let renderSellerSales = debounce(
     true
 );
 
+function removeItem(e) {
+
+    let card = $(e).closest(".card");
+    let seller = e.dataset.seller;
+    let purchaseId = e.dataset.purchaseid;
+    let index = parseInt(e.dataset.index);
+
+    // Make sure the element is there
+    let foundElement = purchases[purchaseId].find(function(element) {
+        return (element && element.id === index);
+    });
+
+    if (foundElement != null) {
+        let result = purchases[purchaseId].indexOf(foundElement)
+        if (result > -1) {
+            purchases[purchaseId].splice(result, 1);
+
+            let key = DB_INSTANCE + '/purchases/' + purchaseId + '/' + index;
+            firebase.database().ref(key).remove().then(function() {
+                calculateSellerSales();
+                renderSellerSales();
+                renderSellerSummary(card, seller);
+            });
+        }
+    }
+}
+
 function renderSellerSummary(element, seller) {
 
     var rawState = $(element).find(".card-header").attr("aria-expanded");
     let isExpanding = !(rawState === 'true');
 
     let elem = $("#collapse" + seller);
-
-    if (!isExpanding) {
-        return;
-    }
 
     var htmlRows = "";
     var totalAmount = 0;
@@ -101,7 +124,11 @@ function renderSellerSummary(element, seller) {
 
                 // Only append the rows for regular sellers
                 if (seller !== "CAFE") {
-                    htmlRows += '  <tr><td><i class="fa fa-clock-o" aria-hidden="true"></i> ' + row.dateString + '</td><td></td><td>' + row.amount + 'kr</td><td><i class="fa fa-trash shopping-trash" aria-hidden="true" data-purchaseId="' + purchaseId + '" data-index="' + row.id + '"></i></td></tr>';
+                    htmlRows += '  <tr id="sumEntry-' + purchaseId + '-' + row.id + '">' +
+                    '    <td><i class="fa fa-clock-o" aria-hidden="true"></i> ' + row.dateString + '</td>' +
+                    '    <td></td><td>' + row.amount + 'kr</td>' +
+                    '    <td><i class="fa fa-trash shopping-trash" aria-hidden="true" id="sumTrashEntry-' + purchaseId + '-' + row.id + '" data-purchaseid="' + purchaseId + '" data-index="' + row.id + '" data-seller="' + seller + '" onClick="removeItem(this);"></i></td>' +
+                    '  </tr>';
                 }
             }
         });
@@ -226,14 +253,7 @@ $(document).ready(function(){
 
     let purchaseRef = firebase.database().ref(DB_INSTANCE + '/purchases');
     purchaseRef.on('child_added', function(data) {
-        purchases[data.key] = data.val();
-        calculateSellerSales();
-        renderSellerSales();
-
-    });
-
-    purchaseRef.on('child_changed', function(data) {
-        console.log("Child changed", data.val());
+        console.log("Child added", data.val());
         purchases[data.key] = data.val();
         calculateSellerSales();
         renderSellerSales();

@@ -8,11 +8,8 @@ $("#addEntrySeller").on('keypress', function (e) {
     }
 });
 
-
-
 // Validators for input fields
 $('#addEntrySeller').on('input', function() {
-
 
     var sellerElem = $("#addEntrySeller");
     if (validateAddEntrySeller()) {
@@ -21,9 +18,6 @@ $('#addEntrySeller').on('input', function() {
         $(sellerElem).css('color', '#c82333');
     }
 });
-
-
-
 
 $('#exampleModal').on('hidden.bs.modal', function (e) {
    console.log("Modal dismissed");

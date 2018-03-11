@@ -29,14 +29,17 @@ $('#exampleModal').on('hidden.bs.modal', function (e) {
 });
 
 function performLogin() {
+    var email = $("#modalUser").val();
     var password = $("#modalPassword").val();
-    var email = "loppis@rosenhorn.se";
+    $("#modalPassword").val("");
+
     firebase.auth().signInAndRetrieveDataWithEmailAndPassword(email, password).catch(function(error) {
         // Handle Errors here.
         var errorCode = error.code;
         var errorMessage = error.message;
 
         console.log("Login failed with ", error);
+        $("#modalWrongPassword").show();
     });
 
 }
@@ -76,6 +79,13 @@ $(document).ready(function(){
     firebase.auth().onAuthStateChanged(function(user) {
         if (user) {
             console.log("User is logged in");
+
+            let email = user.email;
+            // yeye
+            if (email === "admin@rosenhorn.se") {
+                $("#navSaleSummary").show();
+            }
+
             $('#exampleModal').modal('hide');
         } else {
             console.log("User is not logged in");
@@ -83,13 +93,4 @@ $(document).ready(function(){
         }
         $('#addEntrySeller').focus();
     });
-
-//    for(i = 1; i <= 100; i++) {
-//
-//        var items = [
-//        {"seller": "A1", "amount": 5 * i}
-//        ];
-//
-//        purchaseHistory.addEntry(i, items);
-//    }
 });

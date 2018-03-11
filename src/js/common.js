@@ -338,5 +338,9 @@ $("#buttonCompletePurchase").click(function() {
     $('#addEntrySeller').focus();
 });
 
-
+function signOut() {
+    firebase.auth().signOut().then(function() {
+        window.location = "/";
+    });
+}
 

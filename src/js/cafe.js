@@ -17,3 +17,19 @@ $("#buttonAddEntry").click(function() {
     amountElem.val("");
     sellerElem.focus();
 });
+
+
+$(document).ready(function(){
+    firebase.auth().onAuthStateChanged(function(user) {
+        if (!user) {
+            console.log("User is not logged in, redirecting");
+            window.location = "/";
+        } else {
+            let email = user.email;
+            // yeye
+            if (email === "admin@rosenhorn.se") {
+                $("#navSaleSummary").show();
+            }
+        }
+    });
+});

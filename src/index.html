@@ -34,8 +34,11 @@
                   <li class="nav-item">
                     <a class="nav-link" href="/cafe.html">Cafe</a>
                   </li>
-                  <li class="nav-item">
+                  <li class="nav-item collapse" id="navSaleSummary">
                     <a class="nav-link" href="/summary.html">Säljsummering</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="#" onClick="signOut();">Logga ut</a>
                   </li>
                 </ul>
               </div>
@@ -103,8 +106,6 @@
             <p class="text-right text-secondary">@ Trollface Productions 2018</p>
           </footer>
 
-
-
         <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -112,11 +113,27 @@
                         <h5 class="modal-title" id="exampleModalLabel">Inloggning</h5>
                     </div>
                     <div class="modal-body">
-                        Lösenord <input type="password" id="modalPassword">
+                        <div class="alert alert-danger collapse" role="alert" id="modalWrongPassword">
+                         Felaktigt lösenord
+                        </div>
+
+                        <div class="form-group">
+                            <label for="modalUser">Användartyp</label>
+                            <select class="form-control" id="modalUser">
+                              <option value="loppis@rosenhorn.se">Kassa / Cafe</option>
+                              <option value="admin@rosenhorn.se">Administratör</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="modalPassword">Lösenord</label>
+                            <input type="password" class="form-control" id="modalPassword">
+                        </div>
+
                     </div>
+
                     <div class="modal-footer">
                         <!--<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>-->
-                        <button type="button" class="btn btn-primary" id="modalButtonLogin">Login</button>
+                        <button type="button" class="btn btn-primary" id="modalButtonLogin">Logga in</button>
                     </div>
                 </div>
             </div>

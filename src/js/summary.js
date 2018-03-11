@@ -251,12 +251,20 @@ function updateEntry(key, amount, effect) {
 $(document).ready(function(){
     initTable();
 
-    let purchaseRef = firebase.database().ref(DB_INSTANCE + '/purchases');
-    purchaseRef.on('child_added', function(data) {
-        console.log("Child added", data.val());
-        purchases[data.key] = data.val();
-        calculateSellerSales();
-        renderSellerSales();
+    firebase.auth().onAuthStateChanged(function(user) {
+        if (!user) {
+            console.log("User is not logged in, redirecting");
+            window.location = "/";
+        } else {
+
+            let purchaseRef = firebase.database().ref(DB_INSTANCE + '/purchases');
+            purchaseRef.on('child_added', function(data) {
+                console.log("Child added", data.val());
+                purchases[data.key] = data.val();
+                calculateSellerSales();
+                renderSellerSales();
+            });
+        }
     });
 
     setTimeout(function () {

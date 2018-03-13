@@ -10,14 +10,14 @@ Date.prototype.getFullMinutes = function () {
 };
 
 function formatDate() {
-    let now = new Date();
+    var now = new Date();
 
-    let lookup = ["Jan", "Feb", "Mar", "Apr", "Maj", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"];
+    var lookup = ["Jan", "Feb", "Mar", "Apr", "Maj", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"];
 
-    let monthIndex = now.getMonth();
-    let day = now.getDate();
-    let hour = now.getHours();
-    let minute = now.getMinutes();
+    var monthIndex = now.getMonth();
+    var day = now.getDate();
+    var hour = now.getHours();
+    var minute = now.getMinutes();
 
     return lookup[monthIndex] + " " + day + ", " + hour + ":" + minute;
 }
@@ -151,7 +151,7 @@ Cart.prototype.reset = function() {
 Cart.prototype.loadItems = function(saleId, items) {
     this.reset();
     this.saleId = saleId;
-    let self = this;
+    var self = this;
     items.forEach(function(entry) {
         self.addEntry(entry.seller, entry.amount, entry.swish);
     });
@@ -176,14 +176,14 @@ History.prototype.addEntry = function (saleId, cartItems) {
     console.log("Removing ", saleId);
     $("#" + saleId).remove();
 
-    let itemCount = 0;
-    let total = 0;
+    var itemCount = 0;
+    var total = 0;
     cartItems.forEach(function(entry) {
         itemCount++;
         total += entry["amount"];
     });
 
-    let entry = {
+    var entry = {
         items: itemCount,
         amount: total
     };
@@ -213,8 +213,8 @@ History.prototype.addEntry = function (saleId, cartItems) {
 };
 
 
-let cart = new Cart();
-let purchaseHistory = new History();
+var cart = new Cart();
+var purchaseHistory = new History();
 
 /*
     Load a history item into current cart
@@ -223,7 +223,7 @@ let purchaseHistory = new History();
 */
 function loadCart(saleId) {
     console.log("Wanted to reload cart with", saleId);
-    let items = purchaseHistory.items[saleId];
+    var items = purchaseHistory.items[saleId];
     if (items !== null) {
         cart.loadItems(saleId, items);
     }
@@ -232,7 +232,7 @@ function loadCart(saleId) {
 // Handlers
 
 function updateCurrentPurchaseHeader (items) {
-    let elem = $("#currentPurchaseHeader");
+    var elem = $("#currentPurchaseHeader");
     if (items === 0) {
         elem.text("Pågående köp");
     } else {
@@ -255,7 +255,7 @@ $("#addEntryAmount").on('keypress', function (e) {
 //https://stackoverflow.com/questions/43929230/query-nested-data-from-firebase-real-time-database-android?rq=1
 
 function validateAddEntryAmount() {
-    let amountElem = $("#addEntryAmount");
+    var amountElem = $("#addEntryAmount");
     if (!Number(amountElem.val())) {
         return false;
     }
@@ -276,7 +276,7 @@ function validateAddEntrySeller() {
         return true;
     }
 
-    let first = sellerValue[0];
+    var first = sellerValue[0];
 
     // Just the seller number should always validate
     if (sellerValue.length === 1 && first === SELLER_PREFIX) {
@@ -296,7 +296,7 @@ function validateAddEntrySeller() {
     }
 
     // Check that the rest is a number
-    let rest = sellerValue.slice(1);
+    var rest = sellerValue.slice(1);
     if (!Number(rest)) {
         return false;
     }
@@ -327,10 +327,10 @@ $("#buttonCompletePurchase").click(function() {
         return
     }
 
-    let paymentOption = $('input[name=paymentOption]:checked').val();
+    var paymentOption = $('input[name=paymentOption]:checked').val();
     cart.setPaymentOption(paymentOption === "swish")
 
-    let saleId = fbUpdateOrInsertSale(cart.saleId, cart.items);
+    var saleId = fbUpdateOrInsertSale(cart.saleId, cart.items);
     purchaseHistory.addEntry(saleId, cart.items);
 
     cart.reset();

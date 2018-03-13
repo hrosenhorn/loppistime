@@ -7,8 +7,8 @@ $("#buttonAddEntry").click(function() {
         return false;
     }
 
-    let sellerElem = $("#addEntrySeller");
-    let amountElem = $("#addEntryAmount");
+    var sellerElem = $("#addEntrySeller");
+    var amountElem = $("#addEntryAmount");
 
     cart.addEntry(sellerElem.val(), Number(amountElem.val()), true);
     updateCurrentPurchaseHeader(cart.items.length);
@@ -25,7 +25,7 @@ $(document).ready(function(){
             console.log("User is not logged in, redirecting");
             window.location = "/";
         } else {
-            let email = user.email;
+            var email = user.email;
             // yeye
             if (email === "admin@rosenhorn.se") {
                 $("#navSaleSummary").show();

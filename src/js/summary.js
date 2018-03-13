@@ -1,12 +1,12 @@
 
-let purchases = {};
+var purchases = {};
 var sellerSales = {};
 
 function formatAmount(input) {
     return new Intl.NumberFormat('se-SE', { }).format(input)
 }
 
-let calculateSellerSales = debounce(
+var calculateSellerSales = debounce(
     function calculateSellerSales(seller) {
         sellerSales = {};
         var itemSales = 0;
@@ -18,7 +18,7 @@ let calculateSellerSales = debounce(
         console.log("Calculating seller sales");
 
         for(var propt in purchases){
-            let purchase = purchases[propt];
+            var purchase = purchases[propt];
             purchase.forEach(function(row) {
                 if (sellerSales[row.seller] === undefined) {
                     sellerSales[row.seller] = 0;
@@ -44,7 +44,7 @@ let calculateSellerSales = debounce(
         $("#sumTotalSaleBody").text("Kläder " + formatAmount(itemSales) + " kr - Cafe " + formatAmount(cafeSales) + " kr");
 
 
-        let itemProfit = itemSales * 0.3;
+        var itemProfit = itemSales * 0.3;
         $("#sumTotalProfitHeader").text("Totala intäckter " + formatAmount(itemProfit + cafeSales) + "kr");
         $("#sumTotalProfitBody").text("Kläder " + formatAmount(itemProfit) + " kr - Cafe swish " + formatAmount(cafeSwish) + " kr - Cafe kontant " + formatAmount(cafeCash) + " kr");
     },
@@ -52,14 +52,14 @@ let calculateSellerSales = debounce(
     true
 );
 
-let renderSellerSales = debounce(
+var renderSellerSales = debounce(
     function renderSellerSales() {
         console.log("Rendering seller sales");
 
         for(var seller in sellerSales){
-            let key = "#summary-" + seller;
+            var key = "#summary-" + seller;
 
-            let major = sellerSales[seller] * 0.7;
+            var major = sellerSales[seller] * 0.7;
 
             $(key).hide();
             $(key).text(major.toFixed(2) + " kr (70%)");
@@ -72,22 +72,22 @@ let renderSellerSales = debounce(
 
 function removeItem(e) {
 
-    let card = $(e).closest(".card");
-    let seller = e.dataset.seller;
-    let purchaseId = e.dataset.purchaseid;
-    let index = parseInt(e.dataset.index);
+    var card = $(e).closest(".card");
+    var seller = e.dataset.seller;
+    var purchaseId = e.dataset.purchaseid;
+    var index = parseInt(e.dataset.index);
 
     // Make sure the element is there
-    let foundElement = purchases[purchaseId].find(function(element) {
+    var foundElement = purchases[purchaseId].find(function(element) {
         return (element && element.id === index);
     });
 
     if (foundElement != null) {
-        let result = purchases[purchaseId].indexOf(foundElement)
+        var result = purchases[purchaseId].indexOf(foundElement)
         if (result > -1) {
             purchases[purchaseId].splice(result, 1);
 
-            let key = DB_INSTANCE + '/purchases/' + purchaseId + '/' + index;
+            var key = DB_INSTANCE + '/purchases/' + purchaseId + '/' + index;
             firebase.database().ref(key).remove().then(function() {
                 calculateSellerSales();
                 renderSellerSales();
@@ -100,9 +100,9 @@ function removeItem(e) {
 function renderSellerSummary(element, seller) {
 
     var rawState = $(element).find(".card-header").attr("aria-expanded");
-    let isExpanding = !(rawState === 'true');
+    var isExpanding = !(rawState === 'true');
 
-    let elem = $("#collapse" + seller);
+    var elem = $("#collapse" + seller);
 
     var htmlRows = "";
     var totalAmount = 0;
@@ -111,7 +111,7 @@ function renderSellerSummary(element, seller) {
 
     console.log("Fetching sale summary for seller " + seller);
     for(var purchaseId in purchases){
-        let purchase = purchases[purchaseId];
+        var purchase = purchases[purchaseId];
         purchase.forEach(function(row) {
             if (row.seller === seller) {
                 totalAmount += row.amount;
@@ -134,7 +134,7 @@ function renderSellerSummary(element, seller) {
         });
     }
 
-    let major = totalAmount * 0.7;
+    var major = totalAmount * 0.7;
 
     var summaryRow = "";
     if (seller === "CAFE") {
@@ -143,7 +143,7 @@ function renderSellerSummary(element, seller) {
         summaryRow = "<b>" + major.toFixed(2) + " kr</b> (70%)";
     }
 
-    let table =
+    var table =
     '<table class="table table-striped" id="summaryTable">' +
     htmlRows +
     '  <tr><td>Totalt <b>' + totalAmount + ' kr</b></td><td colspan="3">' + summaryRow + '</td></tr>' +
@@ -158,7 +158,7 @@ function renderSellerSummary(element, seller) {
 
 // Invoked when clicking the "receipt button", triggers modal and sets seller input field
 function toggleReceiptButton(e) {
-    let seller = e.dataset.seller;
+    var seller = e.dataset.seller;
     $("#modalReceiptSeller").val(seller);
     $('#receiptModal').modal('show');
 }
@@ -166,15 +166,15 @@ function toggleReceiptButton(e) {
 // Invoked when the send button is clicked in the receipt modal
 function modalConfirmSendMail(e) {
 
-    let email = $("#modalReceiptEmail").val();
-    let seller = $("#modalReceiptSeller").val();
+    var email = $("#modalReceiptEmail").val();
+    var seller = $("#modalReceiptSeller").val();
 
     console.log("Modal clicked, sending email" + email, seller);
 
     $('#receiptModal').modal('hide');
 
     $("#modalReceiptEmail").val("");
-    let newRef = firebase.database().ref('mailqueue').push();
+    var newRef = firebase.database().ref('mailqueue').push();
 
     newRef.set({
         email: email,
@@ -195,7 +195,7 @@ function initTable() {
             key = "CAFE";
         }
 
-        let card =
+        var card =
             '<div class="card mt-3">' +
             '  <div class="card-header collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse' + key + '">' +
 
@@ -206,7 +206,7 @@ function initTable() {
             '</div>' +
             '</div>';
 
-        let cardElem = $.parseHTML(card);
+        var cardElem = $.parseHTML(card);
 
         $(cardElem).bind('click', renderSellerSummary.bind(null, cardElem, key));
         cards.push(cardElem);
@@ -215,16 +215,16 @@ function initTable() {
     // Generate all rows and insert cards with listeners on each element
     for(i = 0; i < 44; i++) {
 
-        let row =
+        var row =
         '<div class="row">' +
         '  <div class="col"></div>' +
         '  <div class="col"></div>' +
         '  <div class="col"></div>' +
         '</div>';
-        let rowElem = $.parseHTML(row);
+        var rowElem = $.parseHTML(row);
 
         for(j = 0; j < 3; j++) {
-            let card = cards.shift();
+            var card = cards.shift();
             if (card) {
                 $(rowElem).find(".col:eq(" + j + ")").append(card);
             }
@@ -235,8 +235,8 @@ function initTable() {
 }
 
 function updateEntry(key, amount, effect) {
-    let divKey = '#X' + key;
-    let contentKey = '#Y' + key;
+    var divKey = '#X' + key;
+    var contentKey = '#Y' + key;
 
     if (effect) {
       $(divKey).hide();
@@ -257,7 +257,7 @@ $(document).ready(function(){
             window.location = "/";
         } else {
 
-            let purchaseRef = firebase.database().ref(DB_INSTANCE + '/purchases');
+            var purchaseRef = firebase.database().ref(DB_INSTANCE + '/purchases');
             purchaseRef.on('child_added', function(data) {
                 console.log("Child added", data.val());
                 purchases[data.key] = data.val();

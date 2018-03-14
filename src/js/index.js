@@ -75,6 +75,11 @@ $("#buttonAddEntry").click(function() {
     sellerElem.focus();
 });
 
+var initialDelayed = false;
+setTimeout(function () {
+    initialDelayed = true;
+}, 2000);
+
 $(document).ready(function(){
     firebase.auth().onAuthStateChanged(function(user) {
         if (user) {
@@ -85,6 +90,18 @@ $(document).ready(function(){
             if (email === "admin@rosenhorn.se") {
                 $("#navSaleSummary").show();
             }
+
+            var connectedRef = firebase.database().ref(".info/connected");
+            connectedRef.on("value", function(snap) {
+
+                if (initialDelayed) {
+                  if (snap.val() === true) {
+                    $("#connectionNoInternet").hide();
+                  } else {
+                    $("#connectionNoInternet").show();
+                  }
+                }
+            });
 
             $('#exampleModal').modal('hide');
         } else {

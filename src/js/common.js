@@ -195,8 +195,10 @@ History.prototype.addEntry = function (saleId, cartItems) {
         this.defaultState = false;
     }
 
+    $('#purchaseHistory tr').removeClass("font-weight-bold table-info");
+
     // Create a new element to be added to the table
-    var elem = $.parseHTML('<tr id="' + saleId + '">' +
+    var elem = $.parseHTML('<tr id="' + saleId + '" class="font-weight-bold table-info">' +
         '<td><i class="fa fa-shopping-bag" aria-hidden="true"></i> ' + entry.items + '</td>' +
         '<td>' + entry.amount + ' kr</td>' +
         '</tr>');

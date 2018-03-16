@@ -66,7 +66,6 @@ function Cart () {
 
 Cart.prototype.setPaymentOption = function(swish) {
     this.items.forEach(function(entry) {
-    console.log("SETTING TO", entry, swish);
         entry.swish = swish;
     });
 };
@@ -308,6 +307,16 @@ function validateAddEntrySeller() {
     return true;
 }
 
+function updateButtonCompletePurchaseAmount (cart) {
+    var total = 0;
+    cart.items.forEach(function(entry) {
+        total += entry.amount;
+    });
+
+    var message = "Slutför köp - Totalt: " + total + " kr";
+
+    $("#buttonCompletePurchase").html(message);
+}
 
 $('#addEntryAmount').on('input', function() {
     var amountElem = $("#addEntryAmount");
@@ -335,6 +344,8 @@ $("#buttonCompletePurchase").click(function() {
 
     cart.reset();
     updateCurrentPurchaseHeader(cart.items.length);
+    updateButtonCompletePurchaseAmount(cart);
+
     $('#addEntrySeller').focus();
 });
 
@@ -343,4 +354,3 @@ function signOut() {
         window.location = "/";
     });
 }
-

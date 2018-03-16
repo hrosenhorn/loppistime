@@ -43,7 +43,7 @@ function performLogin() {
     });
 
 }
-//
+
 // Add entry to current purchase button
 $("#modalButtonLogin").click(function() {
     performLogin();
@@ -54,7 +54,6 @@ $("#modalPassword").on('keypress', function (e) {
         performLogin();
     }
 });
-
 
 // Custom for Sale
 // Add entry to current purchase button
@@ -69,6 +68,7 @@ $("#buttonAddEntry").click(function() {
 
     cart.addEntry(sellerElem.val(), Number(amountElem.val()), true);
     updateCurrentPurchaseHeader(cart.items.length);
+    updateButtonCompletePurchaseAmount(cart);
 
     sellerElem.val(SELLER_PREFIX);
     amountElem.val("");

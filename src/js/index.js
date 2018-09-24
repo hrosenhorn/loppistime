@@ -49,6 +49,7 @@ $("#modalButtonLogin").click(function() {
     performLogin();
 });
 
+// When hitting enter, try to login
 $("#modalPassword").on('keypress', function (e) {
     if(e.which === 13){
         performLogin();
@@ -81,11 +82,17 @@ setTimeout(function () {
 }, 2000);
 
 $(document).ready(function(){
+
+
     firebase.auth().onAuthStateChanged(function(user) {
         if (user) {
             console.log("User is logged in");
 
             var email = user.email;
+
+            // Update the register name in the footer
+            $("#registerName").html("Kassa: " + email.replace("@rosenhorn.se", ""));
+
             // yeye
             if (email === "admin@rosenhorn.se") {
                 $("#navSaleSummary").show();

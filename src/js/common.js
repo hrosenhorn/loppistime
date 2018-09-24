@@ -1,6 +1,6 @@
-const SELLER_PREFIX = "A";
+const SELLER_PREFIX = "B";
 
-const DB_INSTANCE = "vt18"
+const DB_INSTANCE = "ht18";
 
 Date.prototype.getFullMinutes = function () {
    if (this.getMinutes() < 10) {
@@ -23,7 +23,6 @@ function formatDate() {
 }
 
 function fbUpdateOrInsertSale(saleId, items) {
-
     console.log("Setting data using ", saleId);
     var refKey = null;
 
@@ -77,12 +76,15 @@ Cart.prototype.setPaymentOption = function(swish) {
     - Appends element to second last in TR list (last elem is the complete purchase button)
 */
 Cart.prototype.addEntry = function(seller, amount, swish) {
+    var user = firebase.auth().currentUser;
+
     var entry = {
         id: this.counter++,
         seller: seller,
         amount: amount,
         swish: swish,
-        dateString: formatDate()
+        dateString: formatDate(),
+        register: user.email
     };
 
     this.items.push(entry);
@@ -129,6 +131,7 @@ Cart.prototype.removeEntry = function(id) {
         //this.items.splice(index, 1);
         // Instead of removing the entry zero it, allows for a write only db model
         this.items[index].amount = 0;
+        //this.items.splice(index, 1);
     }
 };
 
@@ -339,7 +342,7 @@ $("#buttonCompletePurchase").click(function() {
     }
 
     var paymentOption = $('input[name=paymentOption]:checked').val();
-    cart.setPaymentOption(paymentOption === "swish")
+    cart.setPaymentOption(paymentOption === "swish");
 
     var saleId = fbUpdateOrInsertSale(cart.saleId, cart.items);
     purchaseHistory.addEntry(saleId, cart.items);

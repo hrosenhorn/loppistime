@@ -1,7 +1,7 @@
 
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
-const DB_INSTANCE = "vt18"
+const DB_INSTANCE = "ht18";
 
 admin.initializeApp(functions.config().firebase);
 
@@ -39,14 +39,14 @@ function formatDate() {
 
 const APP_NAME = 'S:t Pers barnloppis';
 
-const THANKS = 'Tack för att du har sålt på S:t Pers barnloppis, denna gång går 30% av pengarna till ett projekt som arbetar mot könsstympning av flickor i Tanzania. Här kan du läsa om vårt insamlingsmål: https://www.svenskakyrkan.se/internationelltarbete/p190';
+const THANKS = 'Tack för att du sålt på S:t Pers barnloppis, denna gång går 30% av pengarna till Domkyrkoförsamlingens arbete för utsatta barn och familjer i Uppsala. Läs mer på https://www.svenskakyrkan.se <br><br> Vid frågor kontakta oss på loppis.stper@gmail.com för allmänna frågor,<br>saljnummer.stper@gmail.com för säljrelaterade ärenden,<br>volontar.stper@gmail.com för volontärrelaterade ärenden.<br>Facebook: Barnloppis i S:t Pers kyrka';
 
 const CONTENT =
     '<!doctype html>' +
     '<html>' +
     '<head>' +
     '    <meta charset="utf-8">' +
-    '    <title>Kvitto från ditt klädköp</title>' +
+    '    <title>Kvitto på dina sålda varor</title>' +
     '    ' +
     '    <style>' +
     '    .invoice-box {' +
@@ -133,7 +133,7 @@ const CONTENT =
     '                <td colspan="2">' +
     '                    <table>' +
     '                        <tr>' +
-    '                            <td class="title"><img src="https://scontent-arn2-1.xx.fbcdn.net/v/t1.0-9/294524_263943307058918_265926684_n.jpg?oh=cf060ef1cfbfdd5226347a4918aa751e&oe=5B0B7B40" style="width:400px; max-width:300px;"></td>' +
+    '                            <td class="title"><img src="https://scontent-arn2-1.xx.fbcdn.net/v/t1.0-1/c63.6.77.77/294524_263943307058918_265926684_n.jpg?_nc_cat=0&oh=b48d9eae8b7ef81779100464d55aebff&oe=5C2373CE" style="width:400px; max-width:300px;"></td>' +
     '                            <td>' +
     '                                Utskriven: [[RECEIPT_DATE]]<br>' +
     '                            </td>' +
@@ -173,6 +173,16 @@ exports.sendReceipt = functions.database.ref('/mailqueue/{id}')
   return sendReceipt(email, content);
 });
 
+function filterItemsZeroAmount(items) {
+    var filtered = [];
+    items.forEach(function(entry) {
+        if (entry.amount > 0) {
+            filtered.push(entry);
+        }
+    });
+    return filtered;
+}
+
 // Sends a welcome email to the given user.
 function sendReceipt(email, seller) {
       const mailOptions = {
@@ -190,7 +200,7 @@ function sendReceipt(email, seller) {
             let purchase = summary[purchaseId];
 
             purchase.forEach(function(row) {
-                if (row.seller === seller) {
+                if (row.seller === seller && row.amount > 0) {
                     items +=
                     '            <tr class="item">' +
                     '                <td>Vara</td>' +
@@ -203,14 +213,14 @@ function sendReceipt(email, seller) {
             });
         }
 
-        let commision = totalAmount * 0.3
+        let commision = totalAmount * 0.3;
         items +=
         '            <tr class="item">' +
         '                <td>Välgörande ändamål (-30%)</td>' +
         '                <td>-' + commision.toFixed(2) + ' kr</td>' +
         '            </tr>';
 
-        totalAmount = totalAmount * 0.7
+        totalAmount = totalAmount * 0.7;
         let total =
             '            <tr class="total">' +
             '                <td></td>' +

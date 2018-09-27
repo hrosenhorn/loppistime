@@ -96,6 +96,7 @@ $(document).ready(function(){
             // yeye
             if (email === "admin@rosenhorn.se") {
                 $("#navSaleSummary").show();
+                $("#navSaleAudit").show();
             }
 
             var connectedRef = firebase.database().ref(".info/connected");

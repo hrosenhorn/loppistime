@@ -84,7 +84,7 @@ Cart.prototype.addEntry = function(seller, amount, swish) {
         amount: amount,
         swish: swish,
         dateString: formatDate(),
-        register: user.email
+        register: user.email.replace("@rosenhorn.se", "")
     };
 
     this.items.push(entry);

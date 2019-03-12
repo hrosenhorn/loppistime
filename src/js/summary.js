@@ -11,6 +11,7 @@ var calculateSellerSales = debounce(
         sellerSales = {};
         var itemSales = 0;
         var totalItems = 0;
+        var totalPurchases = 0;
         var cafeSales = 0;
         var cafeSwish = 0;
         var cafeCash = 0;
@@ -18,6 +19,7 @@ var calculateSellerSales = debounce(
         console.log("Calculating seller sales");
 
         for(var propt in purchases){
+            totalPurchases += 1;
             var purchase = purchases[propt];
             purchase.forEach(function(row) {
                 if (sellerSales[row.seller] === undefined) {
@@ -40,6 +42,9 @@ var calculateSellerSales = debounce(
             });
         }
 
+        console.log("TOTAL PURCHASES", totalPurchases);
+        console.log("TOTAL ITEMS", totalItems);
+
         $("#sumTotalSaleHeader").text("Total försäljning " + formatAmount(itemSales + cafeSales) + "kr");
         $("#sumTotalSaleBody").text("Kläder " + formatAmount(itemSales) + " kr - Cafe " + formatAmount(cafeSales) + " kr");
 
@@ -54,7 +59,7 @@ var calculateSellerSales = debounce(
 
 var renderSellerSales = debounce(
     function renderSellerSales() {
-        console.log("Rendering seller sales");
+        //console.log("Rendering seller sales");
 
         for(var seller in sellerSales){
             var key = "#summary-" + seller;
@@ -264,7 +269,7 @@ $(document).ready(function(){
 
             var purchaseRef = firebase.database().ref(DB_INSTANCE + '/purchases');
             purchaseRef.on('child_added', function(data) {
-                console.log("Child added", data.val());
+                //console.log("Child added", data.val());
                 purchases[data.key] = data.val();
                 calculateSellerSales();
                 renderSellerSales();

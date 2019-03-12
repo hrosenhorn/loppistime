@@ -148,11 +148,14 @@ function renderSellerSummary(element, seller) {
         summaryRow = "<b>" + major.toFixed(2) + " kr</b> (70%)";
     }
 
+    var receiptButton = '  <tr><td colspan="4"><button type="button" class="btn btn-primary btn-lg btn-block" id="receiptButton' + seller + '" data-seller="' + seller + '" onClick="toggleReceiptButton(this);">Skicka kvitto</button></td></tr>';
+
     var table =
     '<table class="table table-striped" id="summaryTable">' +
+    receiptButton +
     htmlRows +
     '  <tr><td>Totalt <b>' + totalAmount + ' kr</b></td><td colspan="3">' + summaryRow + '</td></tr>' +
-    '  <tr><td colspan="3"><button type="button" class="btn btn-primary btn-lg btn-block" id="receiptButton' + seller + '" data-seller="' + seller + '" onClick="toggleReceiptButton(this);">Skicka kvitto</button></td></tr>' +
+    receiptButton +
     '</table>';
 
     $(elem).html(table);

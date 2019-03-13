@@ -15,7 +15,7 @@ $("#buttonAddEntry").click(function() {
 
     sellerElem.val("CAFE");
     amountElem.val("");
-    sellerElem.focus();
+    amountElem.focus();
 });
 
 
@@ -33,4 +33,6 @@ $(document).ready(function(){
             }
         }
     });
+
+    $('#addEntryAmount').focus();
 });

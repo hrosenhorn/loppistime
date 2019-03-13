@@ -73,13 +73,31 @@
                 --->
 
 
+
                 <tr>
-                    <td><input type="text" class="form-control mb-1 mb-sm-0" id="addEntrySeller"
-                               placeholder="Säljnummer, ex: B14"></td>
-                    <td><input type="text" class="form-control mb-1 mb-sm-0" id="addEntryAmount" placeholder="Summa">
-                    </td>
-                    <td>
-                        <button type="submit" id="buttonAddEntry" class="btn btn-info ">Lägg till</button>
+                    <td colspan="3">
+                        <div class="row">
+                            <div class="col-4">
+
+                                Betaltyp
+                                <div class="btn-group" data-toggle="buttons">
+                                    <label class="btn btn-outline-info active">
+                                        <input type="radio" name="paymentOption" id="option1" value="swish" autocomplete="off" checked> Swish
+                                    </label>
+                                    <label class="btn btn-outline-info">
+                                        <input type="radio" name="paymentOption" id="option2" value="cash" autocomplete="off"> Kontant
+                                    </label>
+                                </div>
+
+
+                            </div>
+                            <div class="col-3"><input type="text" class="form-control mb-1 mb-sm-0 " id="addEntrySeller"
+                                                      placeholder="Säljnummer, ex: B14"></div>
+                            <div class="col-3"><input type="text" class="form-control mb-1 mb-sm-0" id="addEntryAmount" placeholder="Summa"></div>
+                            <div class="col-2">
+                                <button type="submit" id="buttonAddEntry" class="btn btn-info ">Lägg till</button>
+                            </div>
+                        </div>
                     </td>
                 </tr>
 

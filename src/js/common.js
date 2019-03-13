@@ -351,6 +351,10 @@ $("#buttonCompletePurchase").click(function() {
     updateCurrentPurchaseHeader(cart.items.length);
     updateButtonCompletePurchaseAmount(cart);
 
+    // The Cafe only has one element to focus
+    $('#addEntryAmount').focus();
+
+    // The regular flow also has the seller field
     $('#addEntrySeller').focus();
 });
 

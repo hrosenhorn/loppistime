@@ -1,5 +1,6 @@
 
 var purchases = {};
+var sellerInfo = {};
 var sellerSales = {};
 
 function formatAmount(input) {
@@ -178,6 +179,13 @@ function renderSellerSummary(element, seller) {
 // Invoked when clicking the "receipt button", triggers modal and sets seller input field
 function toggleReceiptButton(e) {
     var seller = e.dataset.seller;
+
+    var info = sellerInfo[seller];
+    if (info) {
+        $("#receiptModalLabel").text("Skicka kvitto till " + info["name"]);
+        $("#modalReceiptEmail").val(info["email"]);
+    }
+
     $("#modalReceiptSeller").val(seller);
     $('#receiptModal').modal('show');
 }
@@ -287,6 +295,13 @@ $(document).ready(function(){
                 purchases[data.key] = data.val();
                 calculateSellerSales();
                 renderSellerSales();
+            });
+
+
+            var sellersRef = firebase.database().ref(DB_INSTANCE + '/sellers');
+            sellersRef.on('child_added', function(data) {
+                //console.log("Child added", data.val());
+                sellerInfo[data.key] = data.val();
             });
         }
     });

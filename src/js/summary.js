@@ -10,6 +10,8 @@ var calculateSellerSales = debounce(
     function calculateSellerSales(seller) {
         sellerSales = {};
         var itemSales = 0;
+        var itemSwish = 0;
+        var itemCash = 0;
         var totalItems = 0;
         var totalPurchases = 0;
         var cafeSales = 0;
@@ -37,6 +39,13 @@ var calculateSellerSales = debounce(
                     }
                 } else {
                     itemSales += row.amount;
+
+                    if (row.swish === true) {
+                        itemSwish += row.amount;
+                    } else {
+                        itemCash += row.amount;
+                    }
+
                     totalItems += 1;
                 }
             });
@@ -46,12 +55,14 @@ var calculateSellerSales = debounce(
         console.log("TOTAL ITEMS", totalItems);
 
         $("#sumTotalSaleHeader").text("Total försäljning " + formatAmount(itemSales + cafeSales) + "kr");
-        $("#sumTotalSaleBody").text("Kläder " + formatAmount(itemSales) + " kr - Cafe " + formatAmount(cafeSales) + " kr");
-
+        $("#sumTotalSaleBody").html("Kläder " + formatAmount(itemSales) + " kr - Cafe " + formatAmount(cafeSales) + " kr<br>&nbsp;");
 
         var itemProfit = itemSales * 0.3;
+        var itemSwishProfit = itemSwish * 0.3;
+        var itemCashProfit = itemCash * 0.3;
+
         $("#sumTotalProfitHeader").text("Totala intäckter " + formatAmount(itemProfit + cafeSales) + "kr");
-        $("#sumTotalProfitBody").text("Kläder " + formatAmount(itemProfit) + " kr - Cafe swish " + formatAmount(cafeSwish) + " kr - Cafe kontant " + formatAmount(cafeCash) + " kr");
+        $("#sumTotalProfitBody").html("Kläder swish " + formatAmount(itemSwishProfit) + " kr - Kläder kontant " + formatAmount(itemCashProfit) + " kr <br> Cafe swish " + formatAmount(cafeSwish) + " kr - Cafe kontant " + formatAmount(cafeCash) + " kr");
     },
     250,
     true

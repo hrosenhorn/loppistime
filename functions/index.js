@@ -1,7 +1,7 @@
 
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
-const DB_INSTANCE = "ht18";
+const DB_INSTANCE = "vt19";
 
 admin.initializeApp(functions.config().firebase);
 
@@ -39,7 +39,7 @@ function formatDate() {
 
 const APP_NAME = 'S:t Pers barnloppis';
 
-const THANKS = 'Tack för att du sålt på S:t Pers barnloppis, denna gång går 30% av pengarna till Domkyrkoförsamlingens arbete för utsatta barn och familjer i Uppsala. Läs mer på https://www.svenskakyrkan.se <br><br> Vid frågor kontakta oss på loppis.stper@gmail.com för allmänna frågor,<br>saljnummer.stper@gmail.com för säljrelaterade ärenden,<br>volontar.stper@gmail.com för volontärrelaterade ärenden.<br>Facebook: Barnloppis i S:t Pers kyrka';
+const THANKS = 'Tack för att du sålt på S:t Pers barnloppis, denna gång går 30% av pengarna till  till fastekampanjen ”samma himmel, samma rättigheter” som innebär humanitärt stöd vid katastrofinsatser världen över. Läs mer på https://www.svenskakyrkan.se/internationelltarbete/fastekampanjen <br><br> Vid frågor kontakta oss på loppis.stper@gmail.com för allmänna frågor,<br>saljnummer.stper@gmail.com för säljrelaterade ärenden,<br>volontar.stper@gmail.com för volontärrelaterade ärenden.<br>Facebook: Barnloppis i S:t Pers kyrka';
 
 const CONTENT =
     '<!doctype html>' +
@@ -133,7 +133,7 @@ const CONTENT =
     '                <td colspan="2">' +
     '                    <table>' +
     '                        <tr>' +
-    '                            <td class="title"><img src="https://scontent-arn2-1.xx.fbcdn.net/v/t1.0-1/c63.6.77.77/294524_263943307058918_265926684_n.jpg?_nc_cat=0&oh=b48d9eae8b7ef81779100464d55aebff&oe=5C2373CE" style="width:400px; max-width:300px;"></td>' +
+    '                            <td class="title"><img src="https://scontent-arn2-1.xx.fbcdn.net/v/t1.0-9/54798939_2140967432689820_3583718512759144448_o.jpg?_nc_cat=102&_nc_ht=scontent-arn2-1.xx&oh=04a04dbeae6dee5fbdbc147b062d63ef&oe=5D41F747" style="width:400px; max-width:300px;"></td>' +
     '                            <td>' +
     '                                Utskriven: [[RECEIPT_DATE]]<br>' +
     '                            </td>' +

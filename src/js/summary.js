@@ -56,7 +56,7 @@ var calculateSellerSales = debounce(
         console.log("TOTAL ITEMS", totalItems);
 
         $("#sumTotalSaleHeader").text("Total försäljning " + formatAmount(itemSales + cafeSales) + "kr");
-        $("#sumTotalSaleBody").html("Kläder " + formatAmount(itemSales) + " kr - Cafe " + formatAmount(cafeSales) + " kr<br>&nbsp;");
+        $("#sumTotalSaleBody").html("Kläder " + formatAmount(itemSales) + " kr - Cafe " + formatAmount(cafeSales) + " kr<br>Antal köp: " + totalPurchases + " - Sålda varor: " + totalItems + " st");
 
         var itemProfit = itemSales * 0.3;
         var itemSwishProfit = itemSwish * 0.3;

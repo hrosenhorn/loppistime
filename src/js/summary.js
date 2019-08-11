@@ -280,6 +280,12 @@ function updateEntry(key, amount, effect) {
     }
 }
 
+var initialDelayed = false;
+setTimeout(function () {
+    initialDelayed = true;
+}, 2000);
+
+
 $(document).ready(function(){
     initTable();
 
@@ -305,6 +311,20 @@ $(document).ready(function(){
             });
         }
     });
+
+    var connectedRef = firebase.database().ref(".info/connected");
+    connectedRef.on("value", function(snap) {
+
+        if (initialDelayed) {
+            if (snap.val() === true) {
+                $("#connectionNoInternet").hide();
+            } else {
+                //$("#connectionNoInternet").show();
+                // We won't recover from this one since we might have missed childs during being disconnected
+            }
+        }
+    });
+
 
     setTimeout(function () {
         console.log("Forcing summary re rendering");

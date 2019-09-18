@@ -133,7 +133,7 @@ const CONTENT =
     '                <td colspan="2">' +
     '                    <table>' +
     '                        <tr>' +
-    '                            <td class="title"><img src="https://scontent-arn2-1.xx.fbcdn.net/v/t1.0-9/54798939_2140967432689820_3583718512759144448_o.jpg?_nc_cat=102&_nc_ht=scontent-arn2-1.xx&oh=04a04dbeae6dee5fbdbc147b062d63ef&oe=5D41F747" style="width:400px; max-width:300px;"></td>' +
+    '                            <td class="title"><img src="https://loppis-time.firebaseapp.com/img/loppis.png" style="width:400px; max-width:300px;"></td>' +
     '                            <td>' +
     '                                Utskriven: [[RECEIPT_DATE]]<br>' +
     '                            </td>' +
@@ -162,8 +162,8 @@ const CONTENT =
     '</html>';
 
 exports.sendReceipt = functions.database.ref('/mailqueue/{id}')
-    .onWrite(event => {
-        const payload = event.data.val();
+    .onCreate((snapshot, context) => {
+        const payload = snapshot.val();
         console.log("Triggered with", payload);
 
         const email = payload.email;
@@ -210,7 +210,7 @@ function sendReceipt(email, seller) {
 
                     items +=
                     '            <tr class="item">' +
-                    '                <td>' + row.itemName + '</td>' +
+                    '                <td>' + itemName + '</td>' +
                     '                <td>' + row.amount + ' kr</td>' +
                     '            </tr>';
 

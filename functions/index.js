@@ -1,7 +1,7 @@
 
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
-const DB_INSTANCE = "vt19";
+const DB_INSTANCE = "ht19";
 
 admin.initializeApp(functions.config().firebase);
 
@@ -200,10 +200,17 @@ function sendReceipt(email, seller) {
             let purchase = summary[purchaseId];
 
             purchase.forEach(function(row) {
-                if (row.seller === seller && row.amount > 0) {
+                if (row.seller === seller) {
+
+
+                    var itemName = "Vara";
+                    if (row.amount < 0) {
+                        itemName = "Återköp";
+                    }
+
                     items +=
                     '            <tr class="item">' +
-                    '                <td>Vara</td>' +
+                    '                <td>' + row.itemName + '</td>' +
                     '                <td>' + row.amount + ' kr</td>' +
                     '            </tr>';
 

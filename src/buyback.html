@@ -30,11 +30,11 @@
 
                 <div class="collapse navbar-collapse" id="navbarsExample09">
                     <ul class="navbar-nav mr-auto">
-                        <li class="nav-item active">
-                            <a class="nav-link" href="/">Kassa <span class="sr-only">(current)</span></a>
-                        </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/buyback.html">Återköp</a>
+                            <a class="nav-link" href="/">Kassa</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="/buyback.html">Återköp  <span class="sr-only">(current)</span></a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="/cafe.html">Cafe</a>
@@ -62,7 +62,7 @@
                 Tappat internetanslutning, ladda ej om sidan. Väntar på anslutning.
             </div>
 
-            <h3 id="currentPurchaseHeader">Pågående köp</h3>
+            <h3 id="currentPurchaseHeader">Återköp</h3>
             <table class="table table-striped" id="shoppingCart">
                 <tr>
                     <td colspan="3">Inget registrerat ännu</td>
@@ -115,13 +115,16 @@
 
         </div>
 
+
         <div class="col-lg-3">
 
-            <h3>Tidigare köp</h3>
+            <h3>Tidigare återköp</h3>
             <table class="table table-striped" id="purchaseHistory">
+
                 <tr>
-                    <td>Inga tidigare köp</td>
+                    <td>Inga tidigare återköp</td>
                 </tr>
+
             </table>
 
         </div>
@@ -138,55 +141,6 @@
 
 
     </footer>
-
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Inloggning</h5>
-                </div>
-                <div class="modal-body">
-                    <div class="alert alert-danger collapse" role="alert" id="modalWrongPassword">
-                        Felaktigt lösenord
-                    </div>
-
-                    <div class="form-group">
-                        <label for="modalUser">Användartyp</label>
-                        <select class="form-control" id="modalUser">
-                            <option value="kassa1@rosenhorn.se">Kassa #1</option>
-                            <option value="kassa2@rosenhorn.se">Kassa #2</option>
-                            <option value="kassa3@rosenhorn.se">Kassa #3</option>
-                            <option value="kassa4@rosenhorn.se">Kassa #4</option>
-                            <option value="kassa5@rosenhorn.se">Kassa #5</option>
-                            <option value="kassa6@rosenhorn.se">Kassa #6</option>
-                            <option value="kassa7@rosenhorn.se">Kassa #7</option>
-                            <option value="kassa8@rosenhorn.se">Kassa #8</option>
-                            <option value="kassa9@rosenhorn.se">Kassa #9</option>
-                            <option value="kassa10@rosenhorn.se">Kassa #10</option>
-                            <option value="kassa11@rosenhorn.se">Kassa #11</option>
-                            <option value="kassa12@rosenhorn.se">Kassa #12</option>
-                            <option value="kassa13@rosenhorn.se">Kassa #13</option>
-                            <option value="kassa14@rosenhorn.se">Kassa #14</option>
-                            <option value="kassa15@rosenhorn.se">Kassa #15</option>
-                            <option value="admin@rosenhorn.se">Administratör</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="modalPassword">Lösenord</label>
-                        <input type="password" class="form-control" id="modalPassword">
-                    </div>
-
-                </div>
-
-                <div class="modal-footer">
-                    <!--<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>-->
-                    <button type="button" class="btn btn-primary" id="modalButtonLogin">Logga in</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
 
 </div>
 
@@ -220,7 +174,7 @@
         crossorigin="anonymous"></script>
 
 <script type="text/javascript" src="js/common.js"></script>
-<script type="text/javascript" src="js/index.js"></script>
+<script type="text/javascript" src="js/buyback.js"></script>
 
 
 </body>

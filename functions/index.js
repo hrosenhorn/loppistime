@@ -39,7 +39,7 @@ function formatDate() {
 
 const APP_NAME = 'S:t Pers barnloppis';
 
-const THANKS = 'Tack för att du sålt på S:t Pers barnloppis, denna gång går 30% av pengarna till  till fastekampanjen ”samma himmel, samma rättigheter” som innebär humanitärt stöd vid katastrofinsatser världen över. Läs mer på https://www.svenskakyrkan.se/internationelltarbete/fastekampanjen <br><br> Vid frågor kontakta oss på loppis.stper@gmail.com för allmänna frågor,<br>saljnummer.stper@gmail.com för säljrelaterade ärenden,<br>volontar.stper@gmail.com för volontärrelaterade ärenden.<br>Facebook: Barnloppis i S:t Pers kyrka';
+const THANKS = 'Tack för att du sålt på S:t Pers barnloppis, denna gång går 30% av pengarna till Domkyrkoförsamlingens arbete för utsatta barn och familjer i Uppsala. Läs mer på https://www.svenskakyrkan.se/uppsala/stod-till-barn-och-foraldrar <br><br> Vid frågor kontakta oss på loppis.stper@gmail.com för allmänna frågor,<br>saljnummer.stper@gmail.com för säljrelaterade ärenden,<br>volontar.stper@gmail.com för volontärrelaterade ärenden.<br>Facebook: Barnloppis i S:t Pers kyrka';
 
 const CONTENT =
     '<!doctype html>' +

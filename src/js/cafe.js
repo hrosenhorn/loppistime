@@ -11,7 +11,7 @@ $("#buttonAddEntry").click(function() {
     var amountElem = $("#addEntryAmount");
 
     cart.addEntry(sellerElem.val(), Number(amountElem.val()), true);
-    updateCurrentPurchaseHeader(cart.items.length);
+    updateCurrentPurchaseHeader(cart.items);
 
     sellerElem.val("CAFE");
     amountElem.val("");

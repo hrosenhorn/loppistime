@@ -71,7 +71,7 @@ $("#buttonAddEntry").click(function() {
 
 
     cart.addEntry(sellerElem.val(), tmpAmount, true);
-    updateCurrentPurchaseHeader(cart.items.length);
+    updateCurrentPurchaseHeader(cart.items);
     updateButtonCompletePurchaseAmount(cart);
 
     sellerElem.val(SELLER_PREFIX);

@@ -97,8 +97,8 @@ Cart.prototype.addEntry = function(seller, amount, swish) {
 
     // Create a new element to be added to the table
     var elem = $.parseHTML('<tr>' +
-        '<td><i class="fa fa-user" aria-hidden="true"></i> ' + entry.seller + '</td>' +
-        '<td>' + entry.amount + ' kr</td><td><i class="fa fa-trash shopping-trash" aria-hidden="true" data-counter="' + entry.id + '"></i></td>' +
+        '<td><i class="fa fa-user" aria-hidden="true" data-counter="' + entry.id  + '"></i> ' + entry.seller + '</td>' +
+        '<td data-counter="' + entry.id  + '">' + entry.amount + ' kr</td><td><i class="fa fa-trash shopping-trash" aria-hidden="true" data-counter="' + entry.id  + '"></i></td>' +
         '</tr>');
 
     // Bind an event to handle clicking the trash icon
@@ -119,6 +119,8 @@ Cart.prototype.onTrashcanClicked = function(event) {
     var id = parseInt(event.target.dataset["counter"]);
     this.removeEntry(id);
     $(event.currentTarget).remove();
+    updateButtonCompletePurchaseAmount(this);
+    updateCurrentPurchaseHeader(this.items);
 };
 
 Cart.prototype.removeEntry = function(id) {
@@ -132,6 +134,8 @@ Cart.prototype.removeEntry = function(id) {
         // Instead of removing the entry zero it, allows for a write only db model
         this.items[index].amount = 0;
         //this.items.splice(index, 1);
+    } else {
+        console.log("WE DID NOT FIND ENTRY ", id);
     }
 };
 
@@ -237,13 +241,21 @@ function loadCart(saleId) {
 
 function updateCurrentPurchaseHeader (items) {
     var elem = $("#currentPurchaseHeader");
-    if (items === 0) {
+
+    var numItems = 0;
+    items.forEach(function(entry) {
+        if (entry.amount !== 0) {
+            numItems++;
+        }
+    });
+
+    if (numItems === 0) {
         elem.text("Pågående köp");
     } else {
-        if (items === 1) {
-            elem.text("Pågående köp - " + items + " vara");
+        if (numItems === 1) {
+            elem.text("Pågående köp - " + numItems + " vara");
         } else {
-            elem.text("Pågående köp - " + items + " varor");
+            elem.text("Pågående köp - " + numItems + " varor");
         }
 
     }
@@ -348,7 +360,7 @@ $("#buttonCompletePurchase").click(function() {
     purchaseHistory.addEntry(saleId, cart.items);
 
     cart.reset();
-    updateCurrentPurchaseHeader(cart.items.length);
+    updateCurrentPurchaseHeader(cart.items);
     updateButtonCompletePurchaseAmount(cart);
 
     // The Cafe only has one element to focus

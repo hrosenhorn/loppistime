@@ -202,19 +202,22 @@ function sendReceipt(email, seller) {
             purchase.forEach(function(row) {
                 if (row.seller === seller) {
 
+                    // Nopped entries are marked with zero amount
+                    if (row.amount !== 0) {
 
-                    var itemName = "Vara";
-                    if (row.amount < 0) {
-                        itemName = "Återköp";
+                        var itemName = "Vara";
+                        if (row.amount < 0) {
+                            itemName = "Återköp";
+                        }
+
+                        items +=
+                            '            <tr class="item">' +
+                            '                <td>' + itemName + '</td>' +
+                            '                <td>' + row.amount + ' kr</td>' +
+                            '            </tr>';
+
+                        totalAmount += row.amount;
                     }
-
-                    items +=
-                    '            <tr class="item">' +
-                    '                <td>' + itemName + '</td>' +
-                    '                <td>' + row.amount + ' kr</td>' +
-                    '            </tr>';
-
-                    totalAmount += row.amount;
                 }
 
             });

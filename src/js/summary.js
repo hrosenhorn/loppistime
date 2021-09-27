@@ -62,7 +62,7 @@ var calculateSellerSales = debounce(
         var itemSwishProfit = itemSwish * 0.3;
         var itemCashProfit = itemCash * 0.3;
 
-        $("#sumTotalProfitHeader").text("Totala intäckter " + formatAmount(itemProfit + cafeSales) + "kr");
+        $("#sumTotalProfitHeader").text("Totala intäkter " + formatAmount(itemProfit + cafeSales) + "kr");
         $("#sumTotalProfitBody").html("Kläder swish " + formatAmount(itemSwishProfit) + " kr - Kläder kontant " + formatAmount(itemCashProfit) + " kr <br> Cafe swish " + formatAmount(cafeSwish) + " kr - Cafe kontant " + formatAmount(cafeCash) + " kr");
     },
     250,

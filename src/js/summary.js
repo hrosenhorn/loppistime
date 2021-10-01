@@ -245,7 +245,7 @@ function initTable() {
     }
 
     // Generate all rows and insert cards with listeners on each element
-    for(i = 0; i < 44; i++) {
+    for(i = 0; i < 51; i++) {
 
         var row =
         '<div class="row">' +

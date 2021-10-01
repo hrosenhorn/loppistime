@@ -152,7 +152,7 @@ Cart.prototype.reset = function() {
 };
 
     /*
-        Load iems from history, resets internal cart state
+        Load items from history, resets internal cart state
     */
 Cart.prototype.loadItems = function(saleId, items) {
     this.reset();
@@ -210,7 +210,7 @@ History.prototype.addEntry = function (saleId, cartItems) {
         '<td>' + entry.amount + ' kr</td>' +
         '</tr>');
 
-    // Bind an event to handle editing histoy and loading into cart
+    // Bind an event to handle editing history and loading into cart
     $(elem).bind('click', loadCart.bind(null, saleId));
 
     // The last element is the complete purchase button
@@ -235,6 +235,7 @@ function loadCart(saleId) {
     if (items !== null) {
         cart.loadItems(saleId, items);
     }
+    updateButtonCompletePurchaseAmount(cart);
 }
 
 // Handlers

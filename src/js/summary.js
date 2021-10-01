@@ -214,7 +214,7 @@ function initTable() {
 
     var cards = [];
 
-    var numbers = 131;
+    var numbers = 151;
     // Generate all seller cards
     for(i = 0; i <= numbers; i++) {
         var key = SELLER_PREFIX + (i+1);

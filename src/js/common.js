@@ -1,6 +1,6 @@
-const SELLER_PREFIX = "M";
+const SELLER_PREFIX = "V";
 
-const DB_INSTANCE = "ht21";
+const DB_INSTANCE = "vt22";
 
 Date.prototype.getFullMinutes = function () {
    if (this.getMinutes() < 10) {

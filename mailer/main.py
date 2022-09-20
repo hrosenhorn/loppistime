@@ -17,7 +17,7 @@ token = user['idToken']
 db = firebase.database()
 
 # Fetch all sales done
-sales = db.child("vt22/purchases").get(token).val()
+sales = db.child("ht22/purchases").get(token).val()
 
 # Retrieve the mail queue to process
 queue = db.child("mailqueue").get(token).val()

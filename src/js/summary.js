@@ -24,7 +24,7 @@ var calculateSellerSales = debounce(
         for(var propt in purchases){
             totalPurchases += 1;
             var purchase = purchases[propt];
-            purchase.forEach(function(row) {
+                Array.from(purchase).forEach(function(row) {
                 if (sellerSales[row.seller] === undefined) {
                     sellerSales[row.seller] = 0;
                 }
@@ -129,7 +129,7 @@ function renderSellerSummary(element, seller) {
     console.log("Fetching sale summary for seller " + seller);
     for(var purchaseId in purchases){
         var purchase = purchases[purchaseId];
-        purchase.forEach(function(row) {
+        Array.from(purchase).forEach(function(row) {
             if (row.seller === seller) {
                 totalAmount += row.amount;
 
@@ -214,7 +214,7 @@ function initTable() {
 
     var cards = [];
 
-    var numbers = 151;
+    var numbers = 181;
     // Generate all seller cards
     for(i = 0; i <= numbers; i++) {
         var key = SELLER_PREFIX + (i+1);
@@ -245,7 +245,7 @@ function initTable() {
     }
 
     // Generate all rows and insert cards with listeners on each element
-    for(i = 0; i < 51; i++) {
+    for(i = 0; i < 71; i++) {
 
         var row =
         '<div class="row">' +

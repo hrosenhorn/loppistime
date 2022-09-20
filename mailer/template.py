@@ -1,6 +1,6 @@
 # coding=utf-8
 
-THANKS = "Tack för att du sålt på S:t Pers barnloppis, 30% av intäkterna skänks till välgörande ändamål genom Svenska kyrkan och diakonin i Uppsalas arbete med utsatta barnfamiljer. <br><br> Vid frågor kontakta oss på loppis.stper@gmail.com för allmänna frågor,<br>saljnummer.stper@gmail.com för säljrelaterade ärenden,<br>volontar.stper@gmail.com för volontärrelaterade ärenden.<br>Facebook: Barnloppis i S:t Pers kyrka"
+THANKS = "Tack för att du sålt på S:t Pers barnloppis, 30% av intäkterna skänks till Act Svenska kyrkan och projekt för katastrofinsatser. <br><br> Vid frågor kontakta oss på loppis.stper@gmail.com för allmänna frågor,<br>saljnummer.stper@gmail.com för säljrelaterade ärenden,<br>volontar.stper@gmail.com för volontärrelaterade ärenden.<br>Facebook: Barnloppis i S:t Pers kyrka"
 TEMPLATE = """
 <!doctype html>
 <html>

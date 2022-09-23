@@ -33,10 +33,17 @@ for key, value in queue.items():
     print ("Processing %s" % (email, ))
     mail_content = filter_sales(sales, seller)
 
-    send_mail(email, mail_content)
+    #print (mail_content)
+    file_name = seller + ".html"
+    with open("emails/" + file_name, "w", encoding='utf-8') as fp:
+        fp.write(mail_content)
 
-    db.child("mailqueue_processed").push(value, token)
-    db.child("mailqueue").child(key).remove(token)
+
+
+    #send_mail(email, mail_content)
+
+    #db.child("mailqueue_processed").push(value, token)
+    #db.child("mailqueue").child(key).remove(token)
 
     time.sleep(3)
 

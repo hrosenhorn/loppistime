@@ -25,6 +25,9 @@ var calculateSellerSales = debounce(
             totalPurchases += 1;
             var purchase = purchases[propt];
                 Array.from(purchase).forEach(function(row) {
+                if (row === undefined) {
+                    return;
+                }
                 if (sellerSales[row.seller] === undefined) {
                     sellerSales[row.seller] = 0;
                 }
@@ -130,6 +133,11 @@ function renderSellerSummary(element, seller) {
     for(var purchaseId in purchases){
         var purchase = purchases[purchaseId];
         Array.from(purchase).forEach(function(row) {
+
+            // Temp fix until entry removal is fixes
+            if (row == null) {
+                return;
+            }
             if (row.seller === seller) {
                 totalAmount += row.amount;
 

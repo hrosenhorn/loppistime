@@ -24,6 +24,9 @@ def filter_sales(sales, seller):
       if amount < 0:
         item_name = "Återköp"
 
+      if amount == 0:
+        continue
+
       content = """
         <tr class="item">
             <td>%s</td>
@@ -52,6 +55,7 @@ def filter_sales(sales, seller):
 
   today = date.today()
   date_string = today.strftime("%b %d, %Y") # Sep 21, 14:2
+  date_string += "<br> Säljare: %s" % (seller,)
   main_rendering = TEMPLATE.replace("[[RECEIPT_DATE]]", date_string).replace("[[RECEIPT_ITEMS]]", mail_items).replace("[[RECEIPT_TOTAL]]", mail_summary)
 
   return main_rendering

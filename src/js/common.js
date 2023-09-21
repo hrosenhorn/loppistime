@@ -292,6 +292,11 @@ function validateAddEntrySeller() {
         return false;
     }
 
+    if (sellerValue[sellerValue.length - 1] == ' ') {
+        console.log("Caught trailing space, removing.");
+        return false
+    }
+
     if (sellerValue === "CAFE") {
         return true;
     }

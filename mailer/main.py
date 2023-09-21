@@ -17,16 +17,16 @@ token = user['idToken']
 db = firebase.database()
 
 # Fetch all sales done
-sales = db.child("ht22/purchases").get(token).val()
+sales = db.child("ht23/purchases").get(token).val()
 
 # Retrieve the mail queue to process
-queue = db.child("mailqueue").get(token).val()
+#queue = db.child("mailqueue").get(token).val()
+from sellers import SELLERS
 
-if not queue:
-    queue = {}
 
-print ("Fetched %s queue entries" % (len(queue),))
-for key, value in queue.items():
+
+print ("Fetched %s queue entries" % (len(SELLERS),))
+for value in SELLERS:
 
     seller = value["content"]
     email = value["email"]
@@ -34,6 +34,10 @@ for key, value in queue.items():
     mail_content = filter_sales(sales, seller)
 
     #print (mail_content)
+    if len(seller) == 2:
+        letter = seller[0]
+        last = seller[1]
+        seller = letter + "0" + last
     file_name = seller + ".html"
     with open("emails/" + file_name, "w", encoding='utf-8') as fp:
         fp.write(mail_content)
@@ -45,5 +49,5 @@ for key, value in queue.items():
     #db.child("mailqueue_processed").push(value, token)
     #db.child("mailqueue").child(key).remove(token)
 
-    time.sleep(3)
+    time.sleep(0)
 

@@ -8,7 +8,10 @@ Date.prototype.getFullMinutes = function () {
    }
    return this.getMinutes();
 };
-
+function addZero(i) {
+  if (i < 10) {i = "0" + i}
+  return i;
+}
 function formatDate() {
     var now = new Date();
 
@@ -16,8 +19,8 @@ function formatDate() {
 
     var monthIndex = now.getMonth();
     var day = now.getDate();
-    var hour = now.getHours();
-    var minute = now.getMinutes();
+    var hour = addZero(now.getHours());
+    var minute = addZero(now.getMinutes());
 
     return lookup[monthIndex] + " " + day + ", " + hour + ":" + minute;
 }

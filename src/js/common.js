@@ -292,9 +292,9 @@ function validateAddEntrySeller() {
         return false;
     }
 
-    if (sellerValue[sellerValue.length - 1] == ' ') {
-        console.log("Caught trailing space, removing.");
-        return false
+    if (sellerValue.includes(' ')) {
+        console.log("Seller field contains space, rejecting.");
+        return false;
     }
 
     if (sellerValue === "CAFE") {

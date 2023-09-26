@@ -31,7 +31,7 @@ def filter_sales(sales, seller):
         <tr class="item">
             <td>%s</td>
             <td>%s kr</td>
-        </tr          
+        </tr>          
       """ % (item_name, amount)
 
       mail_items += content
@@ -59,27 +59,3 @@ def filter_sales(sales, seller):
   main_rendering = TEMPLATE.replace("[[RECEIPT_DATE]]", date_string).replace("[[RECEIPT_ITEMS]]", mail_items).replace("[[RECEIPT_TOTAL]]", mail_summary)
 
   return main_rendering
-
-def send_mail(receiver_address, mail_content):
-
-  # The mail addresses and password
-  sender_address = config.GMAIL_USER
-  sender_pass = config.GMAIL_PASS
-  receiver_address = receiver_address
-
-  # Setup the MIME
-  message = MIMEMultipart()
-  message['From'] = "St Pers barnloppis <%s>" % (sender_address,)
-  message['To'] = receiver_address
-  message['Subject'] = 'Kvitto på ditt köp från S:t Pers barnloppis'
-
-  # The body and the attachments for the mail
-  message.attach(MIMEText(mail_content, 'html'))
-  # Create SMTP session for sending the mail
-  session = smtplib.SMTP('smtp.gmail.com', 587)  # use gmail with port
-  session.starttls()  # enable security
-  session.login(sender_address, sender_pass)  # login with mail_id and password
-  text = message.as_string()
-  session.sendmail(sender_address, receiver_address, text)
-  session.quit()
-  print("Mail sent to %s" % (receiver_address))

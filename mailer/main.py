@@ -3,7 +3,7 @@
 import time
 import pyrebase
 import config
-from query import filter_sales, send_mail
+from query import filter_sales
 
 firebase = pyrebase.initialize_app(config.FIREBASE_CONFIG)
 
@@ -33,21 +33,7 @@ for value in SELLERS:
     print ("Processing %s" % (email, ))
     mail_content = filter_sales(sales, seller)
 
-    #print (mail_content)
-    if len(seller) == 2:
-        letter = seller[0]
-        last = seller[1]
-        seller = letter + "0" + last
     file_name = seller + ".html"
     with open("emails/" + file_name, "w", encoding='utf-8') as fp:
         fp.write(mail_content)
-
-
-
-    #send_mail(email, mail_content)
-
-    #db.child("mailqueue_processed").push(value, token)
-    #db.child("mailqueue").child(key).remove(token)
-
-    time.sleep(0)
 

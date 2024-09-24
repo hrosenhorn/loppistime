@@ -1,6 +1,6 @@
-const SELLER_PREFIX = "V";
+const SELLER_PREFIX = "H";
 
-const DB_INSTANCE = "vt24";
+const DB_INSTANCE = "ht24";
 
 Date.prototype.getFullMinutes = function () {
    if (this.getMinutes() < 10) {
@@ -336,6 +336,7 @@ function validateAddEntrySeller() {
 function updateButtonCompletePurchaseAmount (cart) {
     var total = 0;
     cart.items.forEach(function(entry) {
+        console.log("Uppdaterar med ", entry);
         total += entry.amount;
     });
 

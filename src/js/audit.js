@@ -86,7 +86,7 @@ function renderPurchases(register) {
                 // Only append the rows for selected register
                 htmlRows += '  <tr>' +
                     '    <td><i class="fa fa-clock-o" aria-hidden="true"></i> ' + row.dateString + '</td>' +
-                    '    <td></td><td>' + row.amount + 'kr</td>' +
+                    '    <td></td><td>(' + row.seller + ') ' + row.amount + 'kr</td>' +
                     '    <td><i class="fa fa-trash shopping-trash" aria-hidden="true" id="sumTrashEntry-' + purchaseId + '-' + row.id + '" data-purchaseid="' + purchaseId + '" data-index="' + row.id + '" data-register="' + row.register + '" onClick="removeItem(this);"></i></td>' +
                     '  </tr>';
             }

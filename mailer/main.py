@@ -35,6 +35,6 @@ for value in SELLERS:
     mail_content = filter_sales(sales, seller)
 
     file_name = seller + ".html"
-    with open("emails-ht24/" + file_name, "w", encoding='utf-8') as fp:
+    with open("emails-vt25/" + file_name, "w", encoding='utf-8') as fp:
         fp.write(mail_content)
 

@@ -30,7 +30,8 @@ for value in SELLERS:
 
     seller = value["content"]
     email = value["email"]
-    print ("Processing %s" % (email, ))
+    patched = seller[1:]
+    print ("python3 kvitto.py %s %s" % (patched, email))
     mail_content = filter_sales(sales, seller)
 
     file_name = seller + ".html"

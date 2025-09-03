@@ -44,12 +44,12 @@ CONFIGURATION_SET = "ConfigSet"
 AWS_REGION = "eu-west-1"
 
 # The subject line for the email.
-SUBJECT = "Säljnummer till vårens barnloppis i S:t Pers kyrka"
+SUBJECT = "Säljnummer till höstens barnloppis i S:t Pers kyrka"
 
 # The full path to the file that will be attached to the email.
-ATTACHMENT1 = "data/VT25/Kontrakt.pdf"
-ATTACHMENT2 = "data/VT25/Instruktioner.pdf"
-ATTACHMENT3 = "data/VT25/Instructions-Eng.pdf"
+ATTACHMENT1 = "data/HT25/Kontrakt.pdf"
+ATTACHMENT2 = "data/HT25/Instruktioner.pdf"
+ATTACHMENT3 = "data/HT25/Instructions-Eng.pdf"
 
 with open("data/number-template.txt", "r") as fp:
     body = fp.read()
